@@ -46,7 +46,55 @@
       "settings": {
         "section_label": "new-section",
         "title": "Trending Products",
-        "layout": "stretchBg"
+        "layout": "boxed"
+      }
+    },
+    "section_featured_collections_jNRgyM": {
+      "type": "section__featured-collections",
+      "blocks": {
+        "collection_PfRrKm": {
+          "type": "collection",
+          "settings": {
+            "collection": "mantra-rings"
+          }
+        },
+        "collection_C6rpQV": {
+          "type": "collection",
+          "settings": {
+            "collection": "charitybands®"
+          }
+        },
+        "collection_bMUaVM": {
+          "type": "collection",
+          "settings": {
+            "collection": "statement-collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_PfRrKm",
+        "collection_C6rpQV",
+        "collection_bMUaVM"
+      ],
+      "name": "List collections",
+      "settings": {
+        "custom_id": "",
+        "displayFor": "display--both",
+        "layout": "default",
+        "nomargin": false,
+        "scopedCSS": "",
+        "height": 0,
+        "padding": 0,
+        "backgroundColor": "rgba(0,0,0,0)",
+        "heading": "Check out this section's heading",
+        "headingColor": "rgba(0,0,0,0)",
+        "subheading": "THIS IS A SUBHEADING",
+        "subheadingColor": "rgba(0,0,0,0)",
+        "subheadingPosition": "above",
+        "headingAlignment": "center",
+        "showMore": true,
+        "showMoreText": "",
+        "showMoreAlignment": "center"
       }
     },
     "1626552856bb50960f": {
@@ -502,6 +550,7 @@
   },
   "order": [
     "best_sellers_z3HJKG",
+    "section_featured_collections_jNRgyM",
     "1626552856bb50960f",
     "16265528618af17c6c",
     "16265529277430f275",
