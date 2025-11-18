@@ -1,0 +1,254 @@
+<style type="text/css">
+  {% render 'common-css' with section as section %}
+
+  #s--{{section.id}} {
+    /* Section specific styles */
+  }
+
+  #s--{{section.id}} .best-sellers__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media screen and (max-width: 767px) {
+    #s--{{section.id}} .best-sellers__container {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+  }
+
+  /* Collection list styles */
+  #s--{{section.id}} .best-sellers__collections {
+    /* Collection list container */
+  }
+
+  #s--{{section.id}} .best-sellers__collection-item {
+    cursor: pointer;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+    transition: color 0.3s ease;
+  }
+
+  #s--{{section.id}} .best-sellers__collection-item.active {
+    color: #000;
+    font-weight: bold;
+  }
+
+  #s--{{section.id}} .best-sellers__collection-item:not(.active) {
+    color: #999;
+  }
+
+  /* Product display styles */
+  #s--{{section.id}} .best-sellers__product {
+    /* Product container */
+  }
+
+  #s--{{section.id}} .best-sellers__product-image {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  #s--{{section.id}} .best-sellers__product-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  #s--{{section.id}} .best-sellers__product-info {
+    /* Product info container */
+  }
+</style>
+
+<div id="s--{{section.id}}" class="{% render 'common-class', section: section, class: 'row', vAlign: false %}">
+  <div class="row layout__content s__content">
+    {% render 'block__general--heading' with section as section %}
+    
+    <div class="best-sellers__container">
+      <!-- Left column: Collections list -->
+      <div class="best-sellers__collections">
+        <div class="best-sellers__subtitle">Best sellers</div>
+        <h2 class="best-sellers__title">Trending Products</h2>
+        
+        <div class="best-sellers__collection-list">
+          {%- for block in section.blocks -%}
+            {% assign collection = collections[block.settings.collection] %}
+            {% if collection %}
+              <div 
+                class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
+                data-collection-block="{{ block.id }}"
+                data-collection-handle="{{ collection.handle }}"
+                onclick="BoosterTheme.bestSellers.switchCollection(this, '{{ block.id }}')"
+              >
+                {% unless block.settings.collection_title == blank %}
+                  {{ block.settings.collection_title }}
+                {% else %}
+                  {{ collection.title }}
+                {% endunless %}
+                <span>→</span>
+              </div>
+            {% endif %}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- Right column: Product display -->
+      <div class="best-sellers__product">
+        {%- for block in section.blocks -%}
+          {% assign collection = collections[block.settings.collection] %}
+          {% if collection %}
+            {% if block.settings.product %}
+              {% assign display_product = block.settings.product %}
+            {% else %}
+              {% assign display_product = collection.products.first %}
+            {% endif %}
+
+            {% if display_product %}
+              <div 
+                class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
+                data-product-block="{{ block.id }}"
+                id="product-{{ block.id }}"
+              >
+                <div class="best-sellers__product-image">
+                  <a href="{{ display_product.url }}">
+                    {% if display_product.featured_image %}
+                      <picture>
+                        <source 
+                          media="(max-width: 767px)" 
+                          srcset="{{ display_product.featured_image | img_url: '375x' }} 1x, {{ display_product.featured_image | img_url: '750x' }} 2x"
+                        >
+                        <source 
+                          media="(min-width: 768px)" 
+                          srcset="{{ display_product.featured_image | img_url: '520x' }} 1x, {{ display_product.featured_image | img_url: '1040x' }} 2x"
+                        >
+                        <img 
+                          src="{{ display_product.featured_image | img_url: '520x' }}"
+                          alt="{{ display_product.featured_image.alt | escape }}"
+                          loading="lazy"
+                        >
+                      </picture>
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
+                    {% endif %}
+                  </a>
+                </div>
+
+                <div class="best-sellers__product-info">
+                  <h3 class="best-sellers__product-title">
+                    <a href="{{ display_product.url }}">{{ display_product.title }}</a>
+                  </h3>
+                  <div class="best-sellers__product-price">
+                    <span class="price-current">{{ display_product.price | money }}</span>
+                    {% if display_product.compare_at_price > display_product.price %}
+                      <span class="price-compare">{{ display_product.compare_at_price | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  if (typeof BoosterTheme === 'undefined') {
+    BoosterTheme = {};
+  }
+  if (typeof BoosterTheme.bestSellers === 'undefined') {
+    BoosterTheme.bestSellers = {
+      switchCollection: function(element, blockId) {
+        // Remove active class from all collection items
+        document.querySelectorAll('#s--{{section.id}} .best-sellers__collection-item').forEach(function(item) {
+          item.classList.remove('active');
+        });
+        
+        // Add active class to clicked item
+        element.classList.add('active');
+        
+        // Hide all product contents
+        document.querySelectorAll('#s--{{section.id}} .best-sellers__product-content').forEach(function(content) {
+          content.classList.remove('active');
+        });
+        
+        // Show selected product content
+        const productContent = document.getElementById('product-' + blockId);
+        if (productContent) {
+          productContent.classList.add('active');
+        }
+      }
+    };
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Best sellers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_label",
+      "label": "Section label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Trending Products"
+    },
+    {
+      "type": "header",
+      "content": "Section layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Section layout",
+      "options": [
+        {"value": "default", "label": "Global default"},
+        {"value": "boxed", "label": "Boxed"},
+        {"value": "stretchBg", "label": "Full width background"},
+        {"value": "stretchContent", "label": "Full width"}
+      ],
+      "default": "default"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "collection_title",
+          "label": "Collection title",
+          "info": "If empty, collection name will be used"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "If selected, this product will be shown instead of first collection product"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Best sellers",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}
+
