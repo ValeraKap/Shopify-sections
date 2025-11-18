@@ -3,6 +3,13 @@
 
   #s--{{section.id}} {
     /* Section specific styles */
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  #s--{{section.id}} .s__content {
+    box-sizing: border-box;
+    position: relative;
   }
 
   #s--{{section.id}} .best-sellers__container {
@@ -16,6 +23,22 @@
     #s--{{section.id}} .best-sellers__container {
       grid-template-columns: 1fr;
       gap: 30px;
+    }
+    
+    /* Fix mobile padding issue */
+    #s--{{section.id}} .s__content {
+      padding-left: 15px;
+      padding-right: 15px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    #s--{{section.id}} .best-sellers__container {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
   }
 
