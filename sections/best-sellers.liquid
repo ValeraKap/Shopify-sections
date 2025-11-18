@@ -29,6 +29,14 @@
     padding: 15px 0;
     border-bottom: 1px solid #e5e5e5;
     transition: color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+
+  #s--{{section.id}} .best-sellers__collection-item:hover {
+    color: #000;
   }
 
   #s--{{section.id}} .best-sellers__collection-item.active {
@@ -40,6 +48,10 @@
     color: #999;
   }
 
+  #s--{{section.id}} .best-sellers__collection-item span {
+    font-size: 18px;
+  }
+
   /* Product display styles */
   #s--{{section.id}} .best-sellers__product {
     position: relative;
@@ -47,11 +59,14 @@
   }
 
   #s--{{section.id}} .best-sellers__product-content {
-    display: none;
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   #s--{{section.id}} .best-sellers__product-content.active {
-    display: block;
+    display: block !important;
+    opacity: 1;
   }
 
   #s--{{section.id}} .best-sellers__product-image {
@@ -74,7 +89,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    z-index: 2;
+    z-index: 10;
+    pointer-events: none;
   }
 
   #s--{{section.id}} .best-sellers__product-tag {
@@ -87,6 +103,7 @@
     white-space: nowrap;
     background-color: #000;
     color: #fff;
+    line-height: 1.2;
   }
 
   #s--{{section.id}} .best-sellers__product-tag.tag--sale {
@@ -130,7 +147,8 @@
                 class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
                 data-collection-block="{{ block.id }}"
                 data-collection-handle="{{ collection.handle }}"
-                onclick="BoosterTheme.bestSellers.switchCollection(this, '{{ block.id }}')"
+                role="button"
+                tabindex="0"
               >
                 {% unless block.settings.collection_title == blank %}
                   {{ block.settings.collection_title }}
@@ -164,8 +182,19 @@
                 <div class="best-sellers__product-image">
                   <!-- Product tags -->
                   {% assign tags_count = 0 %}
+                  {% assign has_tags = false %}
                   {% if display_product.tags.size > 0 %}
+                    {% for tag in display_product.tags %}
+                      {% if tags_count < 3 %}
+                        {% assign has_tags = true %}
+                        {% assign tags_count = tags_count | plus: 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                  
+                  {% if has_tags %}
                     <div class="best-sellers__product-tags">
+                      {% assign tags_count = 0 %}
                       {% for tag in display_product.tags %}
                         {% if tags_count >= 3 %}{% break %}{% endif %}
                         {% assign tag_lower = tag | downcase %}
@@ -223,33 +252,72 @@
 </div>
 
 <script>
-  if (typeof BoosterTheme === 'undefined') {
-    BoosterTheme = {};
-  }
-  if (typeof BoosterTheme.bestSellers === 'undefined') {
-    BoosterTheme.bestSellers = {
-      switchCollection: function(element, blockId) {
-        // Remove active class from all collection items
-        document.querySelectorAll('#s--{{section.id}} .best-sellers__collection-item').forEach(function(item) {
+  (function() {
+    var sectionId = '{{section.id}}';
+    var sectionSelector = '#s--' + sectionId;
+    
+    if (typeof BoosterTheme === 'undefined') {
+      window.BoosterTheme = {};
+    }
+    if (typeof BoosterTheme.bestSellers === 'undefined') {
+      BoosterTheme.bestSellers = {};
+    }
+    
+    // Initialize function for this section
+    function initBestSellers() {
+      var section = document.querySelector(sectionSelector);
+      if (!section) return;
+      
+      // Get all collection items and product contents for this section
+      var collectionItems = section.querySelectorAll('.best-sellers__collection-item');
+      var productContents = section.querySelectorAll('.best-sellers__product-content');
+      
+      // Switch collection function
+      function switchCollection(element, blockId) {
+        // Remove active class from all collection items in this section
+        collectionItems.forEach(function(item) {
           item.classList.remove('active');
         });
         
         // Add active class to clicked item
-        element.classList.add('active');
+        if (element) {
+          element.classList.add('active');
+        }
         
-        // Hide all product contents
-        document.querySelectorAll('#s--{{section.id}} .best-sellers__product-content').forEach(function(content) {
+        // Hide all product contents in this section
+        productContents.forEach(function(content) {
           content.classList.remove('active');
         });
         
         // Show selected product content
-        const productContent = document.getElementById('product-' + blockId);
+        var productContent = section.querySelector('#product-' + blockId);
         if (productContent) {
           productContent.classList.add('active');
         }
       }
-    };
-  }
+      
+      // Attach click handlers to collection items
+      collectionItems.forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          var blockId = this.getAttribute('data-collection-block');
+          if (blockId) {
+            switchCollection(this, blockId);
+          }
+        });
+      });
+      
+      // Make function available globally for this section
+      window['switchCollection_' + sectionId] = switchCollection;
+    }
+    
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBestSellers);
+    } else {
+      initBestSellers();
+    }
+  })();
 </script>
 
 {% schema %}
