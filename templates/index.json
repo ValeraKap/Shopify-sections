@@ -16,13 +16,31 @@
           "type": "collection",
           "settings": {
             "collection": "mantra-rings",
+            "collection_title": "Mantra Rings",
+            "product": "test"
+          }
+        },
+        "collection_HVgRWa": {
+          "type": "collection",
+          "settings": {
+            "collection": "mantra-rings",
+            "collection_title": "Trending Products",
+            "product": "test"
+          }
+        },
+        "collection_pYQqYd": {
+          "type": "collection",
+          "settings": {
+            "collection": "mantra-rings",
             "collection_title": "Trending Products",
             "product": "test"
           }
         }
       },
       "block_order": [
-        "collection_Me3Egi"
+        "collection_Me3Egi",
+        "collection_HVgRWa",
+        "collection_pYQqYd"
       ],
       "name": "Best sellers",
       "settings": {
