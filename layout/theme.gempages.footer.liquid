@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
   <head>
- {%- render 'ecom_header' -%}
 <!--
 888888b.                              888                88888888888 888                                      
 888  "88b                             888                    888     888                                      
@@ -63,28 +62,28 @@
 -->
     <div class="container">
       <div class="container__top-part">
-        {% section 'top-info-bar' %}
+        <div style="display:none"> {% section 'top-info-bar' %} </div>
         
         <div id="booster__popup--holder" class="booster__popup--holder">
         </div>
 
         {% if template.suffix == 'no-header' or template.suffix == 'landing-no-header' %}
         {% elsif template.suffix == 'landing-alt-header' %}
-          {% section 'header-alt' %}
+          <div style="display:none"> {% section 'header-alt' %} </div>
         {% else %}
           {% case settings.headerType %}
             {% when 'default' %}
-              {% section 'header--default' %}
+              <div style="display:none"> {% section 'header--default' %} </div>
             {% when 'inline-search' %}
-              {% section 'header--inline-search' %}
+              <div style="display:none"> {% section 'header--inline-search' %} </div>
             {% when 'logo-top' %}
-              {% section 'header--logo-top' %}
+              <div style="display:none"> {% section 'header--logo-top' %} </div>
             {% when 'sidebar' %}
-              {% section 'header--sidebar' %}
+              <div style="display:none"> {% section 'header--sidebar' %} </div>
           {% endcase %}
         {% endif %}
 
-        {% section 'bottom-info-bar' %}
+        <div style="display:none"> {% section 'bottom-info-bar' %} </div>
       </div> 
 
       <div id="quickbuy__modal" class="modal"><div onclick="closeModal(event)" class="overlay"></div><div class="content"></div></div>
@@ -107,11 +106,11 @@
       <div class="add-to-cart__success--holder modal">
         {% unless settings.cartAction == 'message' %}<div onclick="closeModal(event)" class="overlay add-to-cart__success--overlay"></div>{% endunless %}
         <div class="add-to-cart__success" id="checkout--success">
-        {% render 'add-to-cart__template--success' %}
+        <div style="display:none"> {% render 'add-to-cart__template--success' %} </div>
         </div>
       </div>
 
-      {% render 'layout__template--specific' %}
+      <div style="display:none"> {% render 'layout__template--specific' %} </div>
 
       <main role="main">
         {{ content_for_layout }}
@@ -136,7 +135,7 @@
     {% endif %}
 
     {{ '/services/javascripts/currencies.js' | script_tag }}
-    {% comment %} If you want to serve the non-minified version, remove .min extension {% endcomment %}
+    
     {{ 'booster.min.js' | asset_url | script_tag }}
     {{ 'unicons.css' | asset_url | stylesheet_tag }}
  
@@ -188,5 +187,5 @@
 888   d88P Y88..88P Y88..88P      X88 Y88b. Y8b.     888     888     888  888 Y8b.     888  888  888 Y8b.     
 8888888P"   "Y88P"   "Y88P"   88888P'  "Y888 "Y8888  888     888     888  888  "Y8888  888  888  888  "Y8888  
 -->
-  {%- render "ecom_footer"-%}</body>
+  </body>
 </html>

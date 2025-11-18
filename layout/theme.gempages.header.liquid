@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
   <head>
- {%- render 'ecom_header' -%}
 <!--
 888888b.                              888                88888888888 888                                      
 888  "88b                             888                    888     888                                      
@@ -124,19 +123,19 @@
       </main>
     </div>
 
-    {% render 'layout__app--code' %}
-    {% render 'layout__bstr--constants' %}
+    
+    
 
     {% if settings.productCompare %}
-      {% render 'product-compare--drawer' %}
+      
     {% endif %}
 
     {% if settings.backTopBtn %}
-      {% render 'scroll_top_button' %}
+      
     {% endif %}
 
     {{ '/services/javascripts/currencies.js' | script_tag }}
-    {% comment %} If you want to serve the non-minified version, remove .min extension {% endcomment %}
+    
     {{ 'booster.min.js' | asset_url | script_tag }}
     {{ 'unicons.css' | asset_url | stylesheet_tag }}
  
@@ -165,19 +164,19 @@
     <script src="{{ 'jquery.zoom.min.js' | asset_url }}" type="text/javascript" defer="defer"></script>
     {% endif %}
 
-    {% render 'layout__custom-code--body' %}
+    
     
 
     {% if settings.discount_popup_enable %}
-      {% render 'discount_popup' %}
+      
     {% endif %}
 
     {% if settings.productCompare %}
-      {% render 'product-compare-modal' %}  
+        
       <div class="product-compare-modal--overlay" data-compare-product-modal-overlay> </div>
     {% endif %}
 
-    {% render 'floating--socials' %}
+    
   <!--
 888888b.                              888                88888888888 888                                      
 888  "88b                             888                    888     888                                      
@@ -188,5 +187,5 @@
 888   d88P Y88..88P Y88..88P      X88 Y88b. Y8b.     888     888     888  888 Y8b.     888  888  888 Y8b.     
 8888888P"   "Y88P"   "Y88P"   88888P'  "Y888 "Y8888  888     888     888  888  "Y8888  888  888  888  "Y8888  
 -->
-  {%- render "ecom_footer"-%}</body>
+  </body>
 </html>
