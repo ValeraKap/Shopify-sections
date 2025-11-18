@@ -46,7 +46,7 @@
       "settings": {
         "section_label": "new-section",
         "title": "Trending Products",
-        "layout": "boxed"
+        "layout": "stretchBg"
       }
     },
     "1626552856bb50960f": {
