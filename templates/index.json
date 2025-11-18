@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "1626552856bb50960f": {
@@ -16,7 +25,7 @@
             "overlayColor": "#000000",
             "heading": "This is your slide's heading",
             "headingColor": "rgba(0,0,0,0)",
-            "content": "<p>Enjoy the flexibility<\/p>",
+            "content": "<p>Enjoy the flexibility</p>",
             "contentColor": "rgba(0,0,0,0)",
             "button1Text": "Primary button",
             "button1Link": "",
@@ -41,7 +50,7 @@
             "overlayColor": "#000000",
             "heading": "IMAGE SLIDE",
             "headingColor": "rgba(0,0,0,0)",
-            "content": "<p>Tell your brand's story through images<\/p>",
+            "content": "<p>Tell your brand's story through images</p>",
             "contentColor": "rgba(0,0,0,0)",
             "button1Text": "Primary button",
             "button1Link": "",
@@ -59,6 +68,7 @@
         "dfbcd514-db16-4a1e-899e-c5d0a96e6a16"
       ],
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
@@ -89,7 +99,7 @@
           "settings": {
             "fullWidth": true,
             "maxBWidth": 100,
-            "content": "<p>Get creative and take advantage of Booster's sections and blocks to create a perfect layout for your store.<\/p>",
+            "content": "<p>Get creative and take advantage of Booster's sections and blocks to create a perfect layout for your store.</p>",
             "detectLists": true,
             "textColor": "rgba(0,0,0,0)",
             "fontFamily": "base",
@@ -102,6 +112,7 @@
         "16265528618af17c6c-1"
       ],
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
@@ -110,6 +121,7 @@
         "padding": 25,
         "lineMargin": 12,
         "backgroundColor": "rgba(0,0,0,0)",
+        "backgroundImageUrl": "",
         "backgroundPosition": "middle",
         "backgroundFilter": "none",
         "backdropIntensity": 50,
@@ -132,6 +144,7 @@
     "16265529277430f275": {
       "type": "section__featured-collection",
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
@@ -148,7 +161,21 @@
         "collection": "",
         "productCount": 6,
         "showMore": true,
-        "showMoreAlignment": "center"
+        "showMoreText": "",
+        "showMoreAlignment": "center",
+        "enableCarousel": false,
+        "enableAutoplay": true,
+        "slideSpeed": 3,
+        "spaceBetween": 30,
+        "enableDragging": true,
+        "enablePagination": true,
+        "enableAutoHeight": false,
+        "buttonDisplayFor": "hide-mobile",
+        "productCardDesktop": 4,
+        "productCardTablet": 2,
+        "productCardMobile": 1,
+        "cardDesktop": "default",
+        "cardMobile": "default"
       }
     },
     "1626552955ad76b5c3": {
@@ -173,7 +200,7 @@
             "overlayOpacity": 40,
             "overlayColor": "#000000",
             "heading": "Look at this image!",
-            "text": "<p>Section text for this image text block<\/p>",
+            "text": "<p>Section text for this image text block</p>",
             "buttonText": "Get this now!",
             "url": "",
             "wideButton": false,
@@ -200,7 +227,7 @@
             "overlayOpacity": 40,
             "overlayColor": "#000000",
             "heading": "Look at this image!",
-            "text": "<p>Section text for this image text block<\/p>",
+            "text": "<p>Section text for this image text block</p>",
             "buttonText": "Get this now!",
             "url": "",
             "wideButton": false,
@@ -214,6 +241,7 @@
         "14c1e56d-aa9a-40b6-8d23-496cc2f2ce2e"
       ],
       "settings": {
+        "custom_id": ""
       }
     },
     "16265531419994101d": {
@@ -232,7 +260,7 @@
             "overlayColor": "#000000",
             "heading": "YOUR IMAGINATION IS THE LIMIT",
             "headingColor": "rgba(0,0,0,0)",
-            "content": "<p>We made sure you had all the tools YOU need to become successful.<\/p>",
+            "content": "<p>We made sure you had all the tools YOU need to become successful.</p>",
             "contentColor": "rgba(0,0,0,0)",
             "button1Text": "Primary button",
             "button1Link": "",
@@ -257,7 +285,7 @@
             "overlayColor": "#000000",
             "heading": "IMAGE SLIDE",
             "headingColor": "rgba(0,0,0,0)",
-            "content": "<p>Tell your brand's story through images<\/p>",
+            "content": "<p>Tell your brand's story through images</p>",
             "contentColor": "rgba(0,0,0,0)",
             "button1Text": "Primary button",
             "button1Link": "",
@@ -275,6 +303,7 @@
         "e7dec322-89ff-4cde-b9de-ab6d79dea61a"
       ],
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
@@ -293,25 +322,31 @@
         "16265531878648c50b-0": {
           "type": "testimonial",
           "settings": {
-            "text": "<p>Great product for a fair price.<\/p>",
+            "text": "<p>Great product for a fair price.</p>",
             "authorName": "John Doe",
-            "fakeImageSex": "men"
+            "fakeImageSex": "men",
+            "imageAlt": "",
+            "star_rating": 5
           }
         },
         "16265531878648c50b-1": {
           "type": "testimonial",
           "settings": {
-            "text": "<p>Great product for anyone serious about making cash.<\/p>",
+            "text": "<p>Great product for anyone serious about making cash.</p>",
             "authorName": "Jane Doe",
-            "fakeImageSex": "women"
+            "fakeImageSex": "women",
+            "imageAlt": "",
+            "star_rating": 5
           }
         },
         "16265531878648c50b-2": {
           "type": "testimonial",
           "settings": {
-            "text": "<p>I just LOVE the flexiblity Booster provides.<\/p>",
+            "text": "<p>I just LOVE the flexiblity Booster provides.</p>",
             "authorName": "John Doe",
-            "fakeImageSex": "men"
+            "fakeImageSex": "men",
+            "imageAlt": "",
+            "star_rating": 5
           }
         }
       },
@@ -321,6 +356,7 @@
         "16265531878648c50b-2"
       ],
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
@@ -341,12 +377,24 @@
         "blockBottomBackground": "#000000",
         "blockBottomText": "#ffffff",
         "useFakeImages": true,
-        "roundedImages": true
+        "roundedImages": true,
+        "enableCarousel": false,
+        "enableAutoplay": true,
+        "slideSpeed": 3,
+        "spaceBetween": 30,
+        "enableDragging": true,
+        "enablePagination": true,
+        "enableAutoHeight": false,
+        "buttonDisplayFor": "hide-mobile",
+        "productCardDesktop": 4,
+        "productCardTablet": 2,
+        "productCardMobile": 1
       }
     },
     "16265532862e859b99": {
       "type": "section__featured-product",
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
@@ -360,22 +408,28 @@
         "subheadingColor": "rgba(0,0,0,0)",
         "subheadingPosition": "below",
         "headingAlignment": "start",
-        "product": "",
-        "showDescription": true
+        "product": "test",
+        "showDescription": true,
+        "video_loop": true,
+        "video_autoplay": true
       }
     },
     "162655331095e1d430": {
       "type": "section__auto-grid",
       "settings": {
+        "custom_id": "",
         "layout": "default",
+        "displayFor": "display--both",
         "nomargin": false,
         "height": 0,
+        "imageMobileSize": "auto",
         "gap": 5
       }
     },
     "1626553335f2494384": {
       "type": "section__featured-collection-list",
       "settings": {
+        "custom_id": "",
         "displayFor": "display--both",
         "layout": "default",
         "nomargin": false,
