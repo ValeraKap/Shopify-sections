@@ -1,76 +1,21 @@
 <style type="text/css">
   {% render 'common-css' with section as section %}
 
-  /* Best Sellers Section Styles */
-  #shopify-section-{{section.id}} #s--{{section.id}},
   #s--{{section.id}} {
     /* Section specific styles */
-    overflow-x: hidden;
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  #s--{{section.id}} .s__content {
-    box-sizing: border-box;
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  /* Desktop: full width columns */
-  @media screen and (min-width: 768px) {
-    #s--{{section.id}} .best-sellers__collections {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    
-    #s--{{section.id}} .best-sellers__product {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    
-    #s--{{section.id}} .best-sellers__container {
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
   }
 
   #s--{{section.id}} .best-sellers__container {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 1fr;
     gap: 40px;
     align-items: start;
-    width: 100%;
-    max-width: 100%;
   }
 
   @media screen and (max-width: 767px) {
     #s--{{section.id}} .best-sellers__container {
-      grid-template-columns: 100%;
+      grid-template-columns: 1fr;
       gap: 30px;
-      width: 100%;
-      max-width: 100%;
-    }
-    
-    /* Fix mobile padding issue */
-    #s--{{section.id}} .s__content {
-      padding-left: 15px !important;
-      padding-right: 15px !important;
-      box-sizing: border-box;
-      overflow-x: hidden;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-    }
-    
-    #s--{{section.id}} .best-sellers__container {
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box;
-      padding-left: 0;
-      padding-right: 0;
     }
   }
 
@@ -110,100 +55,30 @@
   /* Product display styles */
   #s--{{section.id}} .best-sellers__product {
     position: relative;
-    min-height: 500px;
-    width: 100%;
-    height: auto;
-  }
-
-  @media screen and (max-width: 767px) {
-    #s--{{section.id}} .best-sellers__product {
-      min-height: 375px;
-    }
+    min-height: 400px;
   }
 
   #s--{{section.id}} .best-sellers__product-content {
-    display: none;
+    display: none !important;
     opacity: 0;
     transition: opacity 0.3s ease;
-    will-change: opacity;
   }
 
   #s--{{section.id}} .best-sellers__product-content.active {
-    display: block;
+    display: block !important;
     opacity: 1;
-  }
-
-  #s--{{section.id}} .best-sellers__collection-item.switching {
-    pointer-events: none;
-    opacity: 0.7;
   }
 
   #s--{{section.id}} .best-sellers__product-image {
     position: relative;
     width: 100%;
-    height: 500px;
     margin-bottom: 20px;
-    overflow: hidden;
-    background-color: #f5f5f5;
   }
 
-  #s--{{section.id}} .best-sellers__product-image img,
-  #s--{{section.id}} .best-sellers__product-image picture {
+  #s--{{section.id}} .best-sellers__product-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
-  }
-
-  @media screen and (max-width: 767px) {
-    #s--{{section.id}} .best-sellers__product-image {
-      height: 375px;
-    }
-  }
-
-  #s--{{section.id}} .best-sellers__placeholder-wrapper {
-    width: 100%;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f5f5f5;
-  }
-
-  #s--{{section.id}} .best-sellers__placeholder {
-    width: 500px !important;
-    height: 500px !important;
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    flex-shrink: 0;
-  }
-  
-  #s--{{section.id}} .best-sellers__placeholder svg {
-    width: 500px !important;
-    height: 500px !important;
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  @media screen and (max-width: 767px) {
-    #s--{{section.id}} .best-sellers__placeholder-wrapper {
-      height: 375px;
-    }
-    
-    #s--{{section.id}} .best-sellers__placeholder {
-      width: 375px !important;
-      height: 375px !important;
-      max-width: 100%;
-      max-height: 100%;
-    }
-    
-    #s--{{section.id}} .best-sellers__placeholder svg {
-      width: 375px !important;
-      height: 375px !important;
-      max-width: 100%;
-      max-height: 100%;
-    }
   }
 
   /* Product tags styles */
@@ -351,9 +226,7 @@
                         >
                       </picture>
                     {% else %}
-                      <div class="best-sellers__placeholder-wrapper">
-                        {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
-                      </div>
+                      {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
                     {% endif %}
                   </a>
                 </div>
@@ -401,15 +274,6 @@
       
       // Switch collection function
       function switchCollection(element, blockId) {
-        // Prevent multiple clicks
-        if (element && element.classList.contains('switching')) {
-          return;
-        }
-        
-        if (element) {
-          element.classList.add('switching');
-        }
-        
         // Remove active class from all collection items in this section
         collectionItems.forEach(function(item) {
           item.classList.remove('active');
@@ -420,37 +284,15 @@
           element.classList.add('active');
         }
         
-        // Fade out current active content
-        var currentActive = section.querySelector('.best-sellers__product-content.active');
-        if (currentActive) {
-          currentActive.style.opacity = '0';
-          setTimeout(function() {
-            currentActive.classList.remove('active');
-            
-            // Show new content after fade out
-            var productContent = section.querySelector('#product-' + blockId);
-            if (productContent) {
-              productContent.classList.add('active');
-              // Force reflow
-              productContent.offsetHeight;
-              productContent.style.opacity = '1';
-            }
-            
-            if (element) {
-              element.classList.remove('switching');
-            }
-          }, 200);
-        } else {
-          // If no active content, show immediately
-          var productContent = section.querySelector('#product-' + blockId);
-          if (productContent) {
-            productContent.classList.add('active');
-            productContent.style.opacity = '1';
-          }
-          
-          if (element) {
-            element.classList.remove('switching');
-          }
+        // Hide all product contents in this section
+        productContents.forEach(function(content) {
+          content.classList.remove('active');
+        });
+        
+        // Show selected product content
+        var productContent = section.querySelector('#product-' + blockId);
+        if (productContent) {
+          productContent.classList.add('active');
         }
       }
       
