@@ -42,7 +42,16 @@
 
   /* Product display styles */
   #s--{{section.id}} .best-sellers__product {
-    /* Product container */
+    position: relative;
+    min-height: 400px;
+  }
+
+  #s--{{section.id}} .best-sellers__product-content {
+    display: none;
+  }
+
+  #s--{{section.id}} .best-sellers__product-content.active {
+    display: block;
   }
 
   #s--{{section.id}} .best-sellers__product-image {
@@ -55,6 +64,47 @@
     width: 100%;
     height: auto;
     display: block;
+  }
+
+  /* Product tags styles */
+  #s--{{section.id}} .best-sellers__product-tags {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  #s--{{section.id}} .best-sellers__product-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 4px;
+    white-space: nowrap;
+    background-color: #000;
+    color: #fff;
+  }
+
+  #s--{{section.id}} .best-sellers__product-tag.tag--sale {
+    background-color: #e53e3e;
+    color: #fff;
+  }
+
+  @media screen and (max-width: 767px) {
+    #s--{{section.id}} .best-sellers__product-tags {
+      top: 10px;
+      left: 10px;
+      gap: 6px;
+    }
+
+    #s--{{section.id}} .best-sellers__product-tag {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
   }
 
   #s--{{section.id}} .best-sellers__product-info {
@@ -112,6 +162,21 @@
                 id="product-{{ block.id }}"
               >
                 <div class="best-sellers__product-image">
+                  <!-- Product tags -->
+                  {% assign tags_count = 0 %}
+                  {% if display_product.tags.size > 0 %}
+                    <div class="best-sellers__product-tags">
+                      {% for tag in display_product.tags %}
+                        {% if tags_count >= 3 %}{% break %}{% endif %}
+                        {% assign tag_lower = tag | downcase %}
+                        <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
+                          {{ tag }}
+                        </span>
+                        {% assign tags_count = tags_count | plus: 1 %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
                   <a href="{{ display_product.url }}">
                     {% if display_product.featured_image %}
                       <picture>
@@ -126,6 +191,8 @@
                         <img 
                           src="{{ display_product.featured_image | img_url: '520x' }}"
                           alt="{{ display_product.featured_image.alt | escape }}"
+                          width="{{ display_product.featured_image.width }}"
+                          height="{{ display_product.featured_image.height }}"
                           loading="lazy"
                         >
                       </picture>
