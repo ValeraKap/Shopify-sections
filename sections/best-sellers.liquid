@@ -425,17 +425,24 @@
             {% if collection %}
               {% assign display_product = null %}
               
+              {% comment %} If product is selected in block settings, use it {% endcomment %}
               {% if block.settings.product %}
                 {% assign display_product = block.settings.product %}
               {% else %}
-                {% comment %} Get first product from collection - try index first, then loop {% endcomment %}
+                {% comment %} Get first product from collection - try multiple methods {% endcomment %}
+                {% assign display_product = null %}
                 {% if collection.products.size > 0 %}
-                  {% assign display_product = collection.products[0] %}
+                  {% assign display_product = collection.products.first %}
                 {% endif %}
                 {% unless display_product %}
                   {% for product in collection.products limit: 1 %}
                     {% assign display_product = product %}
                   {% endfor %}
+                {% endunless %}
+                {% unless display_product %}
+                  {% if collection.products.size > 0 %}
+                    {% assign display_product = collection.products[0] %}
+                  {% endif %}
                 {% endunless %}
               {% endif %}
 
