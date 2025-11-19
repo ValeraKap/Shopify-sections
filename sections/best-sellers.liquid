@@ -167,26 +167,26 @@
       <!-- Right column: Product display -->
       <div class="best-sellers__product">
         {%- for block in section.blocks -%}
-          {% assign collection = collections[block.settings.collection] %}
-          {% if collection %}
-            {% assign display_product = null %}
-            
-            {% if block.settings.product %}
-              {% assign display_product = block.settings.product %}
-            {% else %}
-              {% comment %} Get first product from collection {% endcomment %}
-              {% for product in collection.products limit: 1 %}
-                {% assign display_product = product %}
-                {% break %}
-              {% endfor %}
-            {% endif %}
+          {% unless block.settings.collection == blank %}
+            {% assign collection = collections[block.settings.collection] %}
+            {% if collection %}
+              {% assign display_product = null %}
+              
+              {% if block.settings.product %}
+                {% assign display_product = block.settings.product %}
+              {% else %}
+                {% comment %} Get first product from collection {% endcomment %}
+                {% for product in collection.products limit: 1 %}
+                  {% assign display_product = product %}
+                {% endfor %}
+              {% endif %}
 
-            {% if display_product and display_product != empty %}
-              <div 
-                class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
-                data-product-block="{{ block.id }}"
-                id="product-{{ block.id }}"
-              >
+              {% if display_product and display_product != empty and display_product != null %}
+                <div 
+                  class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
+                  data-product-block="{{ block.id }}"
+                  id="product-{{ block.id }}"
+                >
                 <div class="best-sellers__product-image">
                   <!-- Product tags -->
                   {% assign tags_count = 0 %}
@@ -251,8 +251,9 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
             {% endif %}
-          {% endif %}
+          {% endunless %}
         {%- endfor -%}
       </div>
     </div>
