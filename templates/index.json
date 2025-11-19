@@ -32,8 +32,8 @@
           "type": "collection",
           "settings": {
             "collection": "statement-collection",
-            "collection_title": "",
-            "product": ""
+            "collection_title": "Statement Collection - (No img)",
+            "product": "product-1-empty"
           }
         }
       },
