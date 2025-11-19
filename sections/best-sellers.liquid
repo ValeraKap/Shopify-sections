@@ -107,12 +107,16 @@
 
   /* Product tags styles */
   #s--{{section.id}} .best-sellers__product-tags {
-    position: absolute;
-    top: 15px;
-    left: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
+    padding: 0;
+    gap: 4px;
+    position: absolute;
+    width: auto;
+    height: auto;
+    left: 16px;
+    top: 16px;
     z-index: 10;
     pointer-events: none;
   }
@@ -139,7 +143,7 @@
     #s--{{section.id}} .best-sellers__product-tags {
       top: 10px;
       left: 10px;
-      gap: 6px;
+      gap: 4px;
     }
 
     #s--{{section.id}} .best-sellers__product-tag {
@@ -193,6 +197,56 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn i {
+    font-size: 20px;
+    color: #000;
+    transition: color 0.3s ease;
+  }
+
+  /* Cart icon indicator (red circle) */
+  #s--{{section.id}} .best-sellers__product-action-btn--eye {
+    position: relative;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn--eye::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn--eye.added::after {
+    background-color: #E41616;
+    animation: cartAdded 0.5s ease-out;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn--eye.added i {
+    color: #fff;
+  }
+
+  @keyframes cartAdded {
+    0% {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
   }
 
   @media screen and (max-width: 767px) {
@@ -377,10 +431,7 @@
                       data-variant-id="{% if display_product.selected_or_first_available_variant %}{{ display_product.selected_or_first_available_variant.id }}{% elsif display_product.first_available_variant %}{{ display_product.first_available_variant.id }}{% endif %}"
                       {% unless display_product.available %}disabled{% endunless %}
                     >
-                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                      </svg>
+                      <i class="uil uil-shopping-basket"></i>
                     </button>
                   </div>
 
@@ -525,6 +576,15 @@
             // Re-enable button
             button.disabled = false;
             button.style.opacity = originalOpacity || '';
+            
+            // Add visual indicator (red circle)
+            button.classList.add('added');
+            
+            // Remove indicator after animation (optional - can keep it)
+            setTimeout(function() {
+              // Uncomment if you want to remove the indicator after some time
+              // button.classList.remove('added');
+            }, 2000);
             
             // Trigger cart update event if available
             if (typeof BoosterTheme !== 'undefined' && BoosterTheme.cart) {
