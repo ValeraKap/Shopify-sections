@@ -31,8 +31,8 @@
         "collection_BBNXmc": {
           "type": "collection",
           "settings": {
-            "collection": "",
-            "collection_title": "",
+            "collection": "statement-collection",
+            "collection_title": "Statement Collection - (No Image)",
             "product": ""
           }
         }
