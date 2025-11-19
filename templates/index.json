@@ -16,7 +16,7 @@
           "type": "collection",
           "settings": {
             "collection": "mantra-rings",
-            "collection_title": "Mantra Rings - (new name)",
+            "collection_title": "Mantra Rings - (New name)",
             "product": "test"
           }
         },
@@ -24,7 +24,7 @@
           "type": "collection",
           "settings": {
             "collection": "charitybands®",
-            "collection_title": "",
+            "collection_title": "CharityBands® - (Disabled Eye)",
             "product": "product-0"
           }
         },
