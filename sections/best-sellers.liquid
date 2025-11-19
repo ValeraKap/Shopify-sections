@@ -108,12 +108,25 @@
     position: relative;
     width: 100%;
     margin-bottom: 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
   }
 
   #s--{{section.id}} .best-sellers__product-image img {
     width: 100%;
     height: auto;
     display: block;
+  }
+
+  #s--{{section.id}} .best-sellers__product-image picture {
+    display: block;
+    width: 100%;
+  }
+
+  #s--{{section.id}} .best-sellers__product-image a {
+    display: block;
+    width: 100%;
   }
 
   /* Product tags styles */
@@ -142,6 +155,7 @@
     white-space: nowrap;
     background-color: #FFFFFF;
     color: #000000;
+    border: 1px solid #999999;
     line-height: 1.2;
     cursor: default;
   }
@@ -149,6 +163,7 @@
   #s--{{section.id}} .best-sellers__product-tag.tag--sale {
     background-color: #E41616;
     color: #FFFFFF;
+    border: 1px solid #E41616;
   }
 
   @media screen and (max-width: 767px) {
