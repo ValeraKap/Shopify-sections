@@ -16,7 +16,7 @@
           "type": "collection",
           "settings": {
             "collection": "mantra-rings",
-            "collection_title": "Mantra Rings - new name",
+            "collection_title": "Mantra Rings - (new name)",
             "product": "test"
           }
         },
@@ -32,7 +32,7 @@
           "type": "collection",
           "settings": {
             "collection": "statement-collection",
-            "collection_title": "Statement Collection - No image",
+            "collection_title": "Statement Collection - (No image)",
             "product": "product-1-empty"
           }
         }
