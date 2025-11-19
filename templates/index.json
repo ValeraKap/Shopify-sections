@@ -24,8 +24,8 @@
           "type": "collection",
           "settings": {
             "collection": "charitybands®",
-            "collection_title": "CharityBands®",
-            "product": "product-0"
+            "collection_title": "",
+            "product": ""
           }
         },
         "collection_pYQqYd": {
@@ -33,7 +33,7 @@
           "settings": {
             "collection": "statement-collection",
             "collection_title": "Statement Collection",
-            "product": ""
+            "product": "product-1-empty"
           }
         }
       },
