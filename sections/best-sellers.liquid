@@ -169,13 +169,19 @@
         {%- for block in section.blocks -%}
           {% assign collection = collections[block.settings.collection] %}
           {% if collection %}
+            {% assign display_product = null %}
+            
             {% if block.settings.product %}
               {% assign display_product = block.settings.product %}
             {% else %}
-              {% assign display_product = collection.products.first %}
+              {% comment %} Get first product from collection {% endcomment %}
+              {% for product in collection.products limit: 1 %}
+                {% assign display_product = product %}
+                {% break %}
+              {% endfor %}
             {% endif %}
 
-            {% if display_product %}
+            {% if display_product and display_product != empty %}
               <div 
                 class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
                 data-product-block="{{ block.id }}"
