@@ -27,11 +27,20 @@
             "collection_title": "",
             "product": "product-0"
           }
+        },
+        "collection_BBNXmc": {
+          "type": "collection",
+          "settings": {
+            "collection": "statement-collection",
+            "collection_title": "",
+            "product": ""
+          }
         }
       },
       "block_order": [
         "collection_Me3Egi",
-        "collection_HVgRWa"
+        "collection_HVgRWa",
+        "collection_BBNXmc"
       ],
       "name": "Best sellers",
       "settings": {
