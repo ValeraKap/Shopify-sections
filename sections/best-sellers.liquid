@@ -127,7 +127,7 @@
     display: block;
     width: 100%;
     position: relative;
-    z-index: 1;
+    z-index: 0;
   }
 
   #s--{{section.id}} .best-sellers__product-image .best-sellers__placeholder {
@@ -445,32 +445,6 @@
                   id="product-{{ block.id }}"
                 >
                 <div class="best-sellers__product-image">
-                  <!-- Product tags -->
-                  {% assign tags_count = 0 %}
-                  {% assign has_tags = false %}
-                  {% if display_product.tags.size > 0 %}
-                    {% for tag in display_product.tags %}
-                      {% if tags_count < 3 %}
-                        {% assign has_tags = true %}
-                        {% assign tags_count = tags_count | plus: 1 %}
-                      {% endif %}
-                    {% endfor %}
-                  {% endif %}
-                  
-                  {% if has_tags %}
-                    <div class="best-sellers__product-tags">
-                      {% assign tags_count = 0 %}
-                      {% for tag in display_product.tags %}
-                        {% if tags_count >= 3 %}{% break %}{% endif %}
-                        {% assign tag_lower = tag | downcase %}
-                        <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
-                          {{ tag }}
-                        </span>
-                        {% assign tags_count = tags_count | plus: 1 %}
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-
                   <!-- Product action buttons -->
                   <div class="best-sellers__product-actions">
                     <!-- Heart button (no functionality) -->
@@ -498,6 +472,32 @@
                       </svg>
                     </button>
                   </div>
+
+                  <!-- Product tags -->
+                  {% assign tags_count = 0 %}
+                  {% assign has_tags = false %}
+                  {% if display_product.tags.size > 0 %}
+                    {% for tag in display_product.tags %}
+                      {% if tags_count < 3 %}
+                        {% assign has_tags = true %}
+                        {% assign tags_count = tags_count | plus: 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                  
+                  {% if has_tags %}
+                    <div class="best-sellers__product-tags">
+                      {% assign tags_count = 0 %}
+                      {% for tag in display_product.tags %}
+                        {% if tags_count >= 3 %}{% break %}{% endif %}
+                        {% assign tag_lower = tag | downcase %}
+                        <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
+                          {{ tag }}
+                        </span>
+                        {% assign tags_count = tags_count | plus: 1 %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
 
                   <a href="{{ display_product.url }}">
                     {% if display_product.featured_image %}
