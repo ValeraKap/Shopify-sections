@@ -143,11 +143,13 @@
     background-color: #000;
     color: #fff;
     line-height: 1.2;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: default;
   }
 
   #s--{{section.id}} .best-sellers__product-image:hover .best-sellers__product-tag {
-    opacity: 0.9;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
   #s--{{section.id}} .best-sellers__product-tag.tag--sale {
@@ -213,6 +215,50 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  /* Eye button indicator (red circle) */
+  #s--{{section.id}} .best-sellers__product-action-btn--eye {
+    position: relative;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn--eye::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn--eye.added::after {
+    background-color: #E41616;
+    animation: cartAdded 0.5s ease-out;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn--eye.added svg {
+    stroke: #fff;
+  }
+
+  @keyframes cartAdded {
+    0% {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
   }
 
   @media screen and (max-width: 767px) {
@@ -617,6 +663,15 @@
             // Re-enable button
             button.disabled = false;
             button.style.opacity = originalOpacity || '';
+            
+            // Add visual indicator (red circle)
+            button.classList.add('added');
+            
+            // Remove indicator after animation (optional - can keep it)
+            setTimeout(function() {
+              // Uncomment if you want to remove the indicator after some time
+              // button.classList.remove('added');
+            }, 2000);
             
             // Trigger cart update event if available
             if (typeof BoosterTheme !== 'undefined' && BoosterTheme.cart) {
