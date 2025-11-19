@@ -26,6 +26,28 @@
     /* Collection list container */
   }
 
+  #s--{{section.id}} .best-sellers__subtitle {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  #s--{{section.id}} .best-sellers__title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #000;
+  }
+
+  @media screen and (max-width: 767px) {
+    #s--{{section.id}} .best-sellers__title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+  }
+
   #s--{{section.id}} .best-sellers__collection-item {
     cursor: pointer;
     padding: 15px 0;
@@ -126,8 +148,123 @@
     }
   }
 
+  /* Product action buttons (heart and eye) */
+  #s--{{section.id}} .best-sellers__product-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn:hover {
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  #s--{{section.id}} .best-sellers__product-action-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #000;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media screen and (max-width: 767px) {
+    #s--{{section.id}} .best-sellers__product-actions {
+      top: 10px;
+      right: 10px;
+      gap: 8px;
+    }
+
+    #s--{{section.id}} .best-sellers__product-action-btn {
+      width: 36px;
+      height: 36px;
+    }
+
+    #s--{{section.id}} .best-sellers__product-action-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  /* Product info styles */
   #s--{{section.id}} .best-sellers__product-info {
-    /* Product info container */
+    margin-top: 20px;
+  }
+
+  #s--{{section.id}} .best-sellers__product-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  #s--{{section.id}} .best-sellers__product-title a {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  #s--{{section.id}} .best-sellers__product-title a:hover {
+    color: #666;
+  }
+
+  #s--{{section.id}} .best-sellers__product-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  #s--{{section.id}} .best-sellers__product-price .price-current {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  #s--{{section.id}} .best-sellers__product-price .price-compare {
+    font-size: 16px;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  @media screen and (max-width: 767px) {
+    #s--{{section.id}} .best-sellers__product-title {
+      font-size: 16px;
+    }
+
+    #s--{{section.id}} .best-sellers__product-price .price-current {
+      font-size: 16px;
+    }
+
+    #s--{{section.id}} .best-sellers__product-price .price-compare {
+      font-size: 14px;
+    }
   }
 </style>
 
@@ -218,6 +355,34 @@
                       {% endfor %}
                     </div>
                   {% endif %}
+
+                  <!-- Product action buttons -->
+                  <div class="best-sellers__product-actions">
+                    <!-- Heart button (no functionality) -->
+                    <button 
+                      type="button" 
+                      class="best-sellers__product-action-btn best-sellers__product-action-btn--heart"
+                      aria-label="Add to favorites"
+                    >
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      </svg>
+                    </button>
+                    <!-- Eye button (add to cart) -->
+                    <button 
+                      type="button" 
+                      class="best-sellers__product-action-btn best-sellers__product-action-btn--eye"
+                      aria-label="Quick add to cart"
+                      data-product-id="{{ display_product.id }}"
+                      data-variant-id="{% if display_product.selected_or_first_available_variant %}{{ display_product.selected_or_first_available_variant.id }}{% elsif display_product.first_available_variant %}{{ display_product.first_available_variant.id }}{% endif %}"
+                      {% unless display_product.available %}disabled{% endunless %}
+                    >
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                  </div>
 
                   <a href="{{ display_product.url }}">
                     {% if display_product.featured_image %}
@@ -318,6 +483,62 @@
           if (blockId) {
             switchCollection(this, blockId);
           }
+        });
+      });
+      
+      // Handle eye button (add to cart)
+      var eyeButtons = section.querySelectorAll('.best-sellers__product-action-btn--eye');
+      eyeButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (this.disabled) return;
+          
+          var productId = this.getAttribute('data-product-id');
+          var variantId = this.getAttribute('data-variant-id');
+          
+          if (!variantId) return;
+          
+          // Disable button during request
+          this.disabled = true;
+          var originalOpacity = this.style.opacity;
+          this.style.opacity = '0.5';
+          
+          // Add to cart
+          fetch(window.Shopify.routes.root + 'cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              items: [{
+                id: variantId,
+                quantity: 1
+              }]
+            })
+          })
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            // Re-enable button
+            button.disabled = false;
+            button.style.opacity = originalOpacity || '';
+            
+            // Trigger cart update event if available
+            if (typeof BoosterTheme !== 'undefined' && BoosterTheme.cart) {
+              BoosterTheme.cart.update();
+            }
+            
+            // Dispatch custom event for cart update
+            document.dispatchEvent(new CustomEvent('booster:cart:update'));
+          })
+          .catch(function(error) {
+            console.error('Error adding to cart:', error);
+            button.disabled = false;
+            button.style.opacity = originalOpacity || '';
+          });
         });
       });
       
