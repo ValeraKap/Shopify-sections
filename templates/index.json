@@ -27,20 +27,11 @@
             "collection_title": "",
             "product": "product-0"
           }
-        },
-        "collection_pYQqYd": {
-          "type": "collection",
-          "settings": {
-            "collection": "statement-collection",
-            "collection_title": "Statement Collection - (No image)",
-            "product": "product-1-empty"
-          }
         }
       },
       "block_order": [
         "collection_Me3Egi",
-        "collection_HVgRWa",
-        "collection_pYQqYd"
+        "collection_HVgRWa"
       ],
       "name": "Best sellers",
       "settings": {
