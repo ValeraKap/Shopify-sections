@@ -433,19 +433,14 @@
                 </div>
               {% endif %}
             {%- elsif block.type == 'collection_all_products' -%}
-              {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
               {% assign collection = collections[block.settings.collection] %}
               {% assign show_item = false %}
 
-              {% comment %} Check if we have content to display based on mode {% endcomment %}
-              {% if display_mode == 'custom_product' %}
-                {% if block.settings.product %}
-                  {% assign show_item = true %}
-                {% endif %}
-              {% else %}
-                {% if collection %}
-                  {% assign show_item = true %}
-                {% endif %}
+              {% comment %} Show item if either custom product or collection is set {% endcomment %}
+              {% if block.settings.product %}
+                {% assign show_item = true %}
+              {% elsif collection %}
+                {% assign show_item = true %}
               {% endif %}
 
               {% if show_item %}
@@ -459,7 +454,7 @@
                   {% unless block.settings.collection_title == blank %}
                     {{ block.settings.collection_title }}
                   {% else %}
-                    {% if display_mode == 'custom_product' and block.settings.product %}
+                    {% if block.settings.product %}
                       {{ block.settings.product.title }}
                     {% elsif collection %}
                       {{ collection.title }}
@@ -598,21 +593,14 @@
               {% endif %}
           {%- elsif block.type == 'collection_all_products' -%}
             {% assign display_product = null %}
-            {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
 
-            {% comment %} Check display mode and get product accordingly {% endcomment %}
-            {% if display_mode == 'custom_product' %}
-              {% comment %} Custom product mode - show selected product {% endcomment %}
-              {% if block.settings.product %}
-                {% assign display_product = block.settings.product %}
-              {% endif %}
-            {% else %}
-              {% comment %} Collection first mode - show first product from collection {% endcomment %}
-              {% if block.settings.collection != blank %}
-                {% assign collection = collections[block.settings.collection] %}
-                {% if collection %}
-                  {% assign display_product = collection.products.first %}
-                {% endif %}
+            {% comment %} Check if custom product is selected, otherwise use first from collection {% endcomment %}
+            {% if block.settings.product %}
+              {% assign display_product = block.settings.product %}
+            {% elsif block.settings.collection != blank %}
+              {% assign collection = collections[block.settings.collection] %}
+              {% if collection %}
+                {% assign display_product = collection.products.first %}
               {% endif %}
             {% endif %}
 
@@ -960,27 +948,10 @@
       "name": "All Products",
       "settings": [
         {
-          "type": "select",
-          "id": "display_mode",
-          "label": "Display mode",
-          "options": [
-            {
-              "value": "collection_first",
-              "label": "First product from collection"
-            },
-            {
-              "value": "custom_product",
-              "label": "Select specific product"
-            }
-          ],
-          "default": "collection_first",
-          "info": "Choose how to display products"
-        },
-        {
           "type": "collection",
           "id": "collection",
           "label": "Collection",
-          "info": "Required for 'First product from collection' mode"
+          "info": "Select collection to show first product automatically"
         },
         {
           "type": "text",
@@ -991,8 +962,8 @@
         {
           "type": "product",
           "id": "product",
-          "label": "Custom Product",
-          "info": "Only used in 'Select specific product' mode"
+          "label": "Custom Product (optional)",
+          "info": "If selected, this product will override the collection's first product"
         }
       ]
     }
