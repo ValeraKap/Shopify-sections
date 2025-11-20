@@ -433,13 +433,13 @@
                 </div>
               {% endif %}
             {%- elsif block.type == 'collection_all_products' -%}
-              {% assign collection = collections[block.settings.collection] %}
+              {% assign all_products_collection = collections[block.settings.collection] %}
               {% assign show_item = false %}
 
               {% comment %} Show item if either custom product or collection is set {% endcomment %}
               {% if block.settings.product %}
                 {% assign show_item = true %}
-              {% elsif collection %}
+              {% elsif all_products_collection %}
                 {% assign show_item = true %}
               {% endif %}
 
@@ -447,7 +447,7 @@
                 <div
                   class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
                   data-collection-block="{{ block.id }}"
-                  data-collection-handle="{% if collection %}{{ collection.handle }}{% endif %}"
+                  data-collection-handle="{% if all_products_collection %}{{ all_products_collection.handle }}{% endif %}"
                   role="button"
                   tabindex="0"
                 >
@@ -456,8 +456,8 @@
                   {% else %}
                     {% if block.settings.product %}
                       {{ block.settings.product.title }}
-                    {% elsif collection %}
-                      {{ collection.title }}
+                    {% elsif all_products_collection %}
+                      {{ all_products_collection.title }}
                     {% endif %}
                   {% endunless %}
                   <span>→</span>
@@ -598,9 +598,9 @@
             {% if block.settings.product %}
               {% assign display_product = block.settings.product %}
             {% elsif block.settings.collection != blank %}
-              {% assign collection = collections[block.settings.collection] %}
-              {% if collection %}
-                {% assign display_product = collection.products.first %}
+              {% assign all_products_collection = collections[block.settings.collection] %}
+              {% if all_products_collection %}
+                {% assign display_product = all_products_collection.products.first %}
               {% endif %}
             {% endif %}
 
