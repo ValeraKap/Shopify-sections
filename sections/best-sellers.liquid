@@ -1,6 +1,7 @@
 <style type="text/css">
   {% render 'common-css' with section as section %}
 
+  /* Collection container styles */
   #s--{{section.id}} .best-sellers__container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -76,13 +77,13 @@
   }
 
   #s--{{section.id}} .best-sellers__product-content {
-    display: none !important;
+    display: none;
     opacity: 0;
     transition: opacity 0.3s ease;
   }
 
   #s--{{section.id}} .best-sellers__product-content.active {
-    display: block !important;
+    display: block;
     opacity: 1;
   }
 
@@ -374,8 +375,12 @@
     <div class="best-sellers__container">
       <!-- Left column: Collections list -->
       <div class="best-sellers__collections">
-        <div class="best-sellers__subtitle">Best sellers</div>
-        <h2 class="best-sellers__title">Trending Products</h2>
+        {% unless section.settings.section_label == blank %}
+          <div class="best-sellers__subtitle">{{ section.settings.section_label }}</div>
+        {% endunless %}
+        {% unless section.settings.title == blank %}
+          <h2 class="best-sellers__title">{{ section.settings.title }}</h2>
+        {% endunless %}
         
         <div class="best-sellers__collection-list">
           {%- for block in section.blocks -%}
