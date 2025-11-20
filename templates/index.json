@@ -44,7 +44,7 @@
       ],
       "name": "Best sellers",
       "settings": {
-        "section_label": "new-section",
+        "section_label": "Best sellers",
         "title": "Trending Products",
         "layout": "boxed"
       }
