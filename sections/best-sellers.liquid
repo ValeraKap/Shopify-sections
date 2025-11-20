@@ -434,18 +434,13 @@
               {% endif %}
             {%- elsif block.type == 'collection_all_products' -%}
               {% assign all_products_collection = collections[block.settings.collection] %}
-              {% assign product_source = block.settings.product_source | default: 'collection_first' %}
               {% assign show_item = false %}
 
-              {% comment %} Check product source and show item accordingly {% endcomment %}
-              {% if product_source == 'custom' %}
-                {% if block.settings.product %}
-                  {% assign show_item = true %}
-                {% endif %}
-              {% else %}
-                {% if all_products_collection %}
-                  {% assign show_item = true %}
-                {% endif %}
+              {% comment %} Show item if we have custom product or collection {% endcomment %}
+              {% if block.settings.custom_product %}
+                {% assign show_item = true %}
+              {% elsif all_products_collection %}
+                {% assign show_item = true %}
               {% endif %}
 
               {% if show_item %}
@@ -459,8 +454,8 @@
                   {% unless block.settings.collection_title == blank %}
                     {{ block.settings.collection_title }}
                   {% else %}
-                    {% if product_source == 'custom' and block.settings.product %}
-                      {{ block.settings.product.title }}
+                    {% if block.settings.custom_product %}
+                      {{ block.settings.custom_product.title }}
                     {% elsif all_products_collection %}
                       {{ all_products_collection.title }}
                     {% endif %}
@@ -598,21 +593,14 @@
               {% endif %}
           {%- elsif block.type == 'collection_all_products' -%}
             {% assign display_product = null %}
-            {% assign product_source = block.settings.product_source | default: 'collection_first' %}
 
-            {% comment %} Check product source and get product accordingly {% endcomment %}
-            {% if product_source == 'custom' %}
-              {% comment %} Custom product mode {% endcomment %}
-              {% if block.settings.product %}
-                {% assign display_product = block.settings.product %}
-              {% endif %}
-            {% else %}
-              {% comment %} Collection first product mode {% endcomment %}
-              {% if block.settings.collection != blank %}
-                {% assign all_products_collection = collections[block.settings.collection] %}
-                {% if all_products_collection %}
-                  {% assign display_product = all_products_collection.products.first %}
-                {% endif %}
+            {% comment %} If custom product selected, use it; otherwise use first from collection {% endcomment %}
+            {% if block.settings.custom_product %}
+              {% assign display_product = block.settings.custom_product %}
+            {% elsif block.settings.collection != blank %}
+              {% assign all_products_collection = collections[block.settings.collection] %}
+              {% if all_products_collection %}
+                {% assign display_product = all_products_collection.products.first %}
               {% endif %}
             {% endif %}
 
@@ -963,7 +951,7 @@
           "type": "collection",
           "id": "collection",
           "label": "Collection",
-          "info": "Select collection for products"
+          "info": "By default, first product from collection will be shown"
         },
         {
           "type": "text",
@@ -972,27 +960,10 @@
           "info": "If empty, collection name will be used"
         },
         {
-          "type": "radio",
-          "id": "product_source",
-          "label": "Product source",
-          "options": [
-            {
-              "value": "collection_first",
-              "label": "First product from collection"
-            },
-            {
-              "value": "custom",
-              "label": "Custom product"
-            }
-          ],
-          "default": "collection_first",
-          "info": "Choose product source"
-        },
-        {
           "type": "product",
-          "id": "product",
-          "label": "Custom Product",
-          "info": "Used only when 'Custom product' is selected above"
+          "id": "custom_product",
+          "label": "Custom Product (optional)",
+          "info": "If selected, this product will replace the first product from collection"
         }
       ]
     }
