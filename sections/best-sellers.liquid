@@ -429,32 +429,15 @@
               {% if block.settings.product %}
                 {% assign display_product = block.settings.product %}
               {% else %}
-                {% comment %} Get first product from collection - try multiple methods {% endcomment %}
+                {% comment %} Get first product from collection {% endcomment %}
                 {% assign display_product = null %}
-                
-                {% comment %} Method 1: Direct loop (most reliable) {% endcomment %}
-                {% for product in collection.products limit: 1 %}
-                  {% assign display_product = product %}
-                {% endfor %}
-                
-                {% comment %} Method 2: Using index access {% endcomment %}
-                {% unless display_product %}
-                  {% if collection.products.size > 0 %}
-                    {% assign display_product = collection.products[0] %}
-                  {% endif %}
-                {% endunless %}
-                
-                {% comment %} Method 3: Using first filter {% endcomment %}
-                {% unless display_product %}
-                  {% assign display_product = collection.products.first %}
-                {% endunless %}
-                
-                {% comment %} Method 4: Direct access via collections handle {% endcomment %}
-                {% unless display_product %}
-                  {% for product in collections[block.settings.collection].products limit: 1 %}
+
+                {% comment %} Try to get first product using paginate to load collection products {% endcomment %}
+                {% paginate collection.products by 1 %}
+                  {% for product in collection.products %}
                     {% assign display_product = product %}
                   {% endfor %}
-                {% endunless %}
+                {% endpaginate %}
               {% endif %}
 
               {% if display_product %}
