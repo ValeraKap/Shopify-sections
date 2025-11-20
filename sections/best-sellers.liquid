@@ -397,31 +397,19 @@
         <div class="best-sellers__collection-list">
           {%- for block in section.blocks -%}
             {%- if block.type == 'collection' -%}
-              {% assign collection = collections[block.settings.collection] %}
-              {% if collection %}
-                <div
-                  class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
-                  data-collection-block="{{ block.id }}"
-                  data-collection-handle="{{ collection.handle }}"
-                  role="button"
-                  tabindex="0"
-                >
-                  {% unless block.settings.collection_title == blank %}
-                    {{ block.settings.collection_title }}
-                  {% else %}
-                    {{ collection.title }}
-                  {% endunless %}
-                  <span>→</span>
-                </div>
-              {% endif %}
-            {%- elsif block.type == 'collection_all_products' -%}
+              {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
               {% assign collection = collections[block.settings.collection] %}
               {% assign show_item = false %}
 
-              {% if block.settings.product %}
-                {% assign show_item = true %}
-              {% elsif collection %}
-                {% assign show_item = true %}
+              {% comment %} Check if we have content to display based on mode {% endcomment %}
+              {% if display_mode == 'custom_product' %}
+                {% if block.settings.product %}
+                  {% assign show_item = true %}
+                {% endif %}
+              {% else %}
+                {% if collection %}
+                  {% assign show_item = true %}
+                {% endif %}
               {% endif %}
 
               {% if show_item %}
@@ -435,10 +423,46 @@
                   {% unless block.settings.collection_title == blank %}
                     {{ block.settings.collection_title }}
                   {% else %}
-                    {% if collection %}
-                      {{ collection.title }}
-                    {% elsif block.settings.product %}
+                    {% if display_mode == 'custom_product' and block.settings.product %}
                       {{ block.settings.product.title }}
+                    {% elsif collection %}
+                      {{ collection.title }}
+                    {% endif %}
+                  {% endunless %}
+                  <span>→</span>
+                </div>
+              {% endif %}
+            {%- elsif block.type == 'collection_all_products' -%}
+              {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
+              {% assign collection = collections[block.settings.collection] %}
+              {% assign show_item = false %}
+
+              {% comment %} Check if we have content to display based on mode {% endcomment %}
+              {% if display_mode == 'custom_product' %}
+                {% if block.settings.product %}
+                  {% assign show_item = true %}
+                {% endif %}
+              {% else %}
+                {% if collection %}
+                  {% assign show_item = true %}
+                {% endif %}
+              {% endif %}
+
+              {% if show_item %}
+                <div
+                  class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
+                  data-collection-block="{{ block.id }}"
+                  data-collection-handle="{% if collection %}{{ collection.handle }}{% endif %}"
+                  role="button"
+                  tabindex="0"
+                >
+                  {% unless block.settings.collection_title == blank %}
+                    {{ block.settings.collection_title }}
+                  {% else %}
+                    {% if display_mode == 'custom_product' and block.settings.product %}
+                      {{ block.settings.product.title }}
+                    {% elsif collection %}
+                      {{ collection.title }}
                     {% endif %}
                   {% endunless %}
                   <span>→</span>
@@ -453,20 +477,26 @@
       <div class="best-sellers__product">
         {%- for block in section.blocks -%}
           {%- if block.type == 'collection' -%}
-            {% unless block.settings.collection == blank %}
-              {% assign collection = collections[block.settings.collection] %}
-              {% if collection %}
-                {% assign display_product = null %}
+            {% assign display_product = null %}
+            {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
 
-                {% comment %} If product is selected in block settings, use it {% endcomment %}
-                {% if block.settings.product %}
-                  {% assign display_product = block.settings.product %}
-                {% else %}
-                  {% comment %} Get first product from collection {% endcomment %}
+            {% comment %} Check display mode and get product accordingly {% endcomment %}
+            {% if display_mode == 'custom_product' %}
+              {% comment %} Custom product mode - show selected product {% endcomment %}
+              {% if block.settings.product %}
+                {% assign display_product = block.settings.product %}
+              {% endif %}
+            {% else %}
+              {% comment %} Collection first mode - show first product from collection {% endcomment %}
+              {% if block.settings.collection != blank %}
+                {% assign collection = collections[block.settings.collection] %}
+                {% if collection %}
                   {% assign display_product = collection.products.first %}
                 {% endif %}
+              {% endif %}
+            {% endif %}
 
-                {% if display_product %}
+            {% if display_product %}
                   <div
                     class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
                     data-product-block="{{ block.id }}"
@@ -566,24 +596,27 @@
                 </div>
               </div>
               {% endif %}
-            {% endif %}
-          {% endunless %}
           {%- elsif block.type == 'collection_all_products' -%}
-            {% if block.settings.collection != blank or block.settings.product %}
-              {% assign collection = collections[block.settings.collection] %}
-              {% assign display_product = null %}
+            {% assign display_product = null %}
+            {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
 
-              {% comment %} If product is selected in block settings, use it {% endcomment %}
+            {% comment %} Check display mode and get product accordingly {% endcomment %}
+            {% if display_mode == 'custom_product' %}
+              {% comment %} Custom product mode - show selected product {% endcomment %}
               {% if block.settings.product %}
                 {% assign display_product = block.settings.product %}
-              {% else %}
-                {% comment %} Get first product from collection {% endcomment %}
+              {% endif %}
+            {% else %}
+              {% comment %} Collection first mode - show first product from collection {% endcomment %}
+              {% if block.settings.collection != blank %}
+                {% assign collection = collections[block.settings.collection] %}
                 {% if collection %}
                   {% assign display_product = collection.products.first %}
                 {% endif %}
               {% endif %}
+            {% endif %}
 
-              {% if display_product %}
+            {% if display_product %}
                   <div
                     class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
                     data-product-block="{{ block.id }}"
@@ -683,7 +716,6 @@
                     </div>
                   </div>
                 {% endif %}
-              {% endif %}
           {%- endif -%}
         {%- endfor -%}
       </div>
@@ -887,9 +919,27 @@
       "name": "Single Product",
       "settings": [
         {
+          "type": "select",
+          "id": "display_mode",
+          "label": "Display mode",
+          "options": [
+            {
+              "value": "collection_first",
+              "label": "First product from collection"
+            },
+            {
+              "value": "custom_product",
+              "label": "Select specific product"
+            }
+          ],
+          "default": "collection_first",
+          "info": "Choose how to display products"
+        },
+        {
           "type": "collection",
           "id": "collection",
-          "label": "Collection"
+          "label": "Collection",
+          "info": "Required for 'First product from collection' mode"
         },
         {
           "type": "text",
@@ -900,8 +950,8 @@
         {
           "type": "product",
           "id": "product",
-          "label": "Product",
-          "info": "If selected, this product will be shown instead of first collection product"
+          "label": "Custom Product",
+          "info": "Only used in 'Select specific product' mode"
         }
       ]
     },
@@ -910,10 +960,27 @@
       "name": "All Products",
       "settings": [
         {
+          "type": "select",
+          "id": "display_mode",
+          "label": "Display mode",
+          "options": [
+            {
+              "value": "collection_first",
+              "label": "First product from collection"
+            },
+            {
+              "value": "custom_product",
+              "label": "Select specific product"
+            }
+          ],
+          "default": "collection_first",
+          "info": "Choose how to display products"
+        },
+        {
           "type": "collection",
           "id": "collection",
           "label": "Collection",
-          "info": "Select collection to get first product automatically"
+          "info": "Required for 'First product from collection' mode"
         },
         {
           "type": "text",
@@ -924,8 +991,8 @@
         {
           "type": "product",
           "id": "product",
-          "label": "Product",
-          "info": "If selected, this product will be shown instead of first collection product"
+          "label": "Custom Product",
+          "info": "Only used in 'Select specific product' mode"
         }
       ]
     }
