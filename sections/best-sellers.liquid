@@ -482,304 +482,303 @@
 </style>
 
 <div id="s--{{section.id}}" class="{% render 'common-class', section: section, class: 'row', vAlign: false %}">
-    <div class="row layout__content s__content">
-        {% render 'block__general--heading' with section as section %}
+  <div class="row layout__content s__content">
+    {% render 'block__general--heading' with section as section %}
+    
+    <div class="best-sellers__container">
+      <!-- Left column: Collections list -->
+      <div class="best-sellers__collections">
+        {% unless section.settings.section_label == blank %}
+          <div class="best-sellers__subtitle">{{ section.settings.section_label }}</div>
+        {% endunless %}
+        {% unless section.settings.title == blank %}
+          <h2 class="best-sellers__title">{{ section.settings.title }}</h2>
+        {% endunless %}
+        
+        <div class="best-sellers__collection-list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'collection' -%}
+              {% assign collection = collections[block.settings.collection] %}
+              {% assign custom_prod = block.settings.custom_product %}
+              {% assign show_item = false %}
 
-        <div class="best-sellers__container">
-            <!-- Left column: Collections list -->
-            <div class="best-sellers__collections">
-                {% unless section.settings.section_label == blank %}
-                    <div class="best-sellers__subtitle">{{ section.settings.section_label }}</div>
-                {% endunless %}
-                {% unless section.settings.title == blank %}
-                    <h2 class="best-sellers__title">{{ section.settings.title }}</h2>
-                {% endunless %}
+              {% comment %} Show item if we have custom product or collection {% endcomment %}
+              {% if custom_prod != blank %}
+                {% assign show_item = true %}
+              {% elsif collection %}
+                {% assign show_item = true %}
+              {% endif %}
 
-                <div class="best-sellers__collection-list">
-                    {%- for block in section.blocks -%}
-                        {%- if block.type == 'collection' -%}
-                            {% assign collection = collections[block.settings.collection] %}
-                            {% assign custom_prod = block.settings.custom_product %}
-                            {% assign show_item = false %}
-
-                            {% comment %} Show item if we have custom product or collection {% endcomment %}
-                            {% if custom_prod != blank %}
-                                {% assign show_item = true %}
-                            {% elsif collection %}
-                                {% assign show_item = true %}
-                            {% endif %}
-
-                            {% if show_item %}
-                                <div
-                                        class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
-                                        data-collection-block="{{ block.id }}"
-                                        data-collection-handle="{% if collection %}{{ collection.handle }}{% endif %}"
-                                        role="button"
-                                        tabindex="0"
-                                >
-                                    {% unless block.settings.collection_title == blank %}
-                                        {{ block.settings.collection_title }}
-                                    {% else %}
-                                        {% if collection %}
-                                            {{ collection.title }}
-                                        {% endif %}
-                                    {% endunless %}
-                                    <span>→</span>
-                                </div>
-                            {% endif %}
-                        {%- endif -%}
-                    {%- endfor -%}
+              {% if show_item %}
+                <div
+                  class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
+                  data-collection-block="{{ block.id }}"
+                  data-collection-handle="{% if collection %}{{ collection.handle }}{% endif %}"
+                  role="button"
+                  tabindex="0"
+                >
+                  {% unless block.settings.collection_title == blank %}
+                    {{ block.settings.collection_title }}
+                  {% else %}
+                    {% if collection %}
+                      {{ collection.title }}
+                    {% endif %}
+                  {% endunless %}
+                  <span>→</span>
                 </div>
-            </div>
+              {% endif %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
 
-            <!-- Right column: Product display -->
-            <div class="best-sellers__product">
-                {%- for block in section.blocks -%}
-                    {%- if block.type == 'collection' -%}
-                        {% assign display_product = null %}
-                        {% assign custom_prod = block.settings.custom_product %}
+      <!-- Right column: Product display -->
+      <div class="best-sellers__product">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'collection' -%}
+            {% assign display_product = null %}
+            {% assign custom_prod = block.settings.custom_product %}
 
-                        {% comment %} If custom product selected, use it; otherwise use first from collection {% endcomment %}
-                        {% if custom_prod != blank %}
-                            {% assign display_product = custom_prod %}
-                        {% elsif block.settings.collection != blank %}
-                            {% assign collection = collections[block.settings.collection] %}
-                            {% if collection %}
-                                {% assign display_product = collection.products.first %}
-                            {% endif %}
-                        {% endif %}
+            {% comment %} If custom product selected, use it; otherwise use first from collection {% endcomment %}
+            {% if custom_prod != blank %}
+              {% assign display_product = custom_prod %}
+            {% elsif block.settings.collection != blank %}
+              {% assign collection = collections[block.settings.collection] %}
+              {% if collection %}
+                {% assign display_product = collection.products.first %}
+              {% endif %}
+            {% endif %}
 
-                        {% if display_product %}
-                            <div
-                                    class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
-                                    data-product-block="{{ block.id }}"
-                                    id="product-{{ block.id }}"
-                            >
-                                <div class="best-sellers__product-image">
-                                    <!-- Product tags -->
-                                    {% assign tags_count = 0 %}
-                                    {% assign has_tags = false %}
-                                    {% if display_product.tags.size > 0 %}
-                                        {% for tag in display_product.tags %}
-                                            {% if tags_count < 3 %}
-                                                {% assign has_tags = true %}
-                                                {% assign tags_count = tags_count | plus: 1 %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endif %}
-
-                                    {% if has_tags %}
-                                        <div class="best-sellers__product-tags">
-                                            {% assign tags_count = 0 %}
-                                            {% for tag in display_product.tags %}
-                                                {% if tags_count >= 3 %}{% break %}{% endif %}
-                                                {% assign tag_lower = tag | downcase %}
-                                                <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
+            {% if display_product %}
+              <div
+                class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
+                data-product-block="{{ block.id }}"
+                id="product-{{ block.id }}"
+              >
+                <div class="best-sellers__product-image">
+                  <!-- Product tags -->
+                  {% assign tags_count = 0 %}
+                  {% assign has_tags = false %}
+                  {% if display_product.tags.size > 0 %}
+                    {% for tag in display_product.tags %}
+                      {% if tags_count < 3 %}
+                        {% assign has_tags = true %}
+                        {% assign tags_count = tags_count | plus: 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                  
+                  {% if has_tags %}
+                    <div class="best-sellers__product-tags">
+                      {% assign tags_count = 0 %}
+                      {% for tag in display_product.tags %}
+                        {% if tags_count >= 3 %}{% break %}{% endif %}
+                        {% assign tag_lower = tag | downcase %}
+                        <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
                           {{ tag }}
                         </span>
-                                                {% assign tags_count = tags_count | plus: 1 %}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
+                        {% assign tags_count = tags_count | plus: 1 %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
 
-                                    <!-- Product action buttons -->
-                                    <div class="best-sellers__product-actions">
-                                        <!-- Heart button (no functionality) -->
-                                        <button
-                                                type="button"
-                                                class="best-sellers__product-action-btn best-sellers__product-action-btn--heart"
-                                                aria-label="Add to favorites"
-                                        >
-                                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                            </svg>
-                                        </button>
-                                        <!-- Eye button (add to cart) -->
-                                        <button
-                                                type="button"
-                                                class="best-sellers__product-action-btn best-sellers__product-action-btn--eye"
-                                                aria-label="Quick add to cart"
-                                                data-product-id="{{ display_product.id }}"
-                                                data-variant-id="{% if display_product.selected_or_first_available_variant %}{{ display_product.selected_or_first_available_variant.id }}{% elsif display_product.first_available_variant %}{{ display_product.first_available_variant.id }}{% endif %}"
-                                                {% unless display_product.available %}disabled{% endunless %}
-                                        >
-                                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                                <circle cx="12" cy="12" r="3"/>
-                                            </svg>
-                                        </button>
-                                    </div>
+                  <!-- Product action buttons -->
+                  <div class="best-sellers__product-actions">
+                    <!-- Heart button (no functionality) -->
+                    <button
+                      type="button"
+                      class="best-sellers__product-action-btn best-sellers__product-action-btn--heart"
+                      aria-label="Add to favorites"
+                    >
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      </svg>
+                    </button>
+                    <!-- Eye button (add to cart) -->
+                    <button
+                      type="button"
+                      class="best-sellers__product-action-btn best-sellers__product-action-btn--eye"
+                      aria-label="Quick add to cart"
+                      data-product-id="{{ display_product.id }}"
+                      data-variant-id="{% if display_product.selected_or_first_available_variant %}{{ display_product.selected_or_first_available_variant.id }}{% elsif display_product.first_available_variant %}{{ display_product.first_available_variant.id }}{% endif %}"
+                      {% unless display_product.available %}disabled{% endunless %}
+                    >
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                  </div>
 
-                                    <a href="{{ display_product.url }}">
-                                        {% if display_product.featured_image %}
-                                            <picture>
-                                                <source
-                                                        media="(max-width: 767px)"
-                                                        srcset="{{ display_product.featured_image | img_url: '375x' }} 1x, {{ display_product.featured_image | img_url: '750x' }} 2x"
-                                                >
-                                                <source
-                                                        media="(min-width: 768px)"
-                                                        srcset="{{ display_product.featured_image | img_url: '520x' }} 1x, {{ display_product.featured_image | img_url: '1040x' }} 2x"
-                                                >
-                                                <img
-                                                        src="{{ display_product.featured_image | img_url: '520x' }}"
-                                                        alt="{{ display_product.featured_image.alt | escape }}"
-                                                        width="{{ display_product.featured_image.width }}"
-                                                        height="{{ display_product.featured_image.height }}"
-                                                        loading="lazy"
-                                                >
-                                            </picture>
-                                        {% else %}
-                                            {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
-                                        {% endif %}
-                                    </a>
+                  <a href="{{ display_product.url }}">
+                    {% if display_product.featured_image %}
+                      <picture>
+                        <source
+                          media="(max-width: 767px)"
+                          srcset="{{ display_product.featured_image | img_url: '375x' }} 1x, {{ display_product.featured_image | img_url: '750x' }} 2x"
+                        >
+                        <source
+                          media="(min-width: 768px)"
+                          srcset="{{ display_product.featured_image | img_url: '520x' }} 1x, {{ display_product.featured_image | img_url: '1040x' }} 2x"
+                        >
+                        <img
+                          src="{{ display_product.featured_image | img_url: '520x' }}"
+                          alt="{{ display_product.featured_image.alt | escape }}"
+                          width="{{ display_product.featured_image.width }}"
+                          height="{{ display_product.featured_image.height }}"
+                          loading="lazy"
+                        >
+                      </picture>
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
+                    {% endif %}
+                  </a>
 
-                                    <!-- Product info overlay -->
-                                    <div class="best-sellers__product-info">
-                                        <h3 class="best-sellers__product-title">
-                                            <a href="{{ display_product.url }}">{{ display_product.title }}</a>
-                                        </h3>
-                                        <div class="best-sellers__product-price">
-                                            <span class="price-current">{{ display_product.price | money }}</span>
-                                            {% if display_product.compare_at_price > display_product.price %}
-                                                <span class="price-compare">{{ display_product.compare_at_price | money }}</span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {%- endif -%}
-                {%- endfor -%}
-            </div>
-        </div>
+                  <!-- Product info overlay -->
+                  <div class="best-sellers__product-info">
+                    <h3 class="best-sellers__product-title">
+                      <a href="{{ display_product.url }}">{{ display_product.title }}</a>
+                    </h3>
+                    <div class="best-sellers__product-price">
+                      <span class="price-current">{{ display_product.price | money }}</span>
+                      {% if display_product.compare_at_price > display_product.price %}
+                        <span class="price-compare">{{ display_product.compare_at_price | money }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    (function() {
-        var sectionId = '{{section.id}}';
-        var sectionSelector = '#s--' + sectionId;
-
-        if (typeof BoosterTheme === 'undefined') {
-            window.BoosterTheme = {};
+  (function() {
+    var sectionId = '{{section.id}}';
+    var sectionSelector = '#s--' + sectionId;
+    
+    if (typeof BoosterTheme === 'undefined') {
+      window.BoosterTheme = {};
+    }
+    if (typeof BoosterTheme.bestSellers === 'undefined') {
+      BoosterTheme.bestSellers = {};
+    }
+    
+    // Initialize function for this section
+    function initBestSellers() {
+      var section = document.querySelector(sectionSelector);
+      if (!section) return;
+      
+      // Get all collection items and product contents for this section
+      var collectionItems = section.querySelectorAll('.best-sellers__collection-item');
+      var productContents = section.querySelectorAll('.best-sellers__product-content');
+      
+      // Switch collection function
+      function switchCollection(element, blockId) {
+        // Remove active class from all collection items in this section
+        collectionItems.forEach(function(item) {
+          item.classList.remove('active');
+        });
+        
+        // Add active class to clicked item
+        if (element) {
+          element.classList.add('active');
         }
-        if (typeof BoosterTheme.bestSellers === 'undefined') {
-            BoosterTheme.bestSellers = {};
+        
+        // Hide all product contents in this section
+        productContents.forEach(function(content) {
+          content.classList.remove('active');
+        });
+        
+        // Show selected product content
+        var productContent = section.querySelector('[id="product-' + blockId + '"]');
+        if (productContent) {
+          productContent.classList.add('active');
         }
-
-        // Initialize function for this section
-        function initBestSellers() {
-            var section = document.querySelector(sectionSelector);
-            if (!section) return;
-
-            // Get all collection items and product contents for this section
-            var collectionItems = section.querySelectorAll('.best-sellers__collection-item');
-            var productContents = section.querySelectorAll('.best-sellers__product-content');
-
-            // Switch collection function
-            function switchCollection(element, blockId) {
-                // Remove active class from all collection items in this section
-                collectionItems.forEach(function(item) {
-                    item.classList.remove('active');
-                });
-
-                // Add active class to clicked item
-                if (element) {
-                    element.classList.add('active');
-                }
-
-                // Hide all product contents in this section
-                productContents.forEach(function(content) {
-                    content.classList.remove('active');
-                });
-
-                // Show selected product content
-                // The blockId might be in format "block-id" or "block-id-index" for menu items
-                var productContent = section.querySelector('[id="product-' + blockId + '"]');
-                if (productContent) {
-                    productContent.classList.add('active');
-                }
+      }
+      
+      // Attach click handlers to collection items
+      collectionItems.forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          var blockId = this.getAttribute('data-collection-block');
+          if (blockId) {
+            switchCollection(this, blockId);
+          }
+        });
+      });
+      
+      // Handle eye button (add to cart)
+      var eyeButtons = section.querySelectorAll('.best-sellers__product-action-btn--eye');
+      eyeButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (this.disabled) return;
+          
+          var productId = this.getAttribute('data-product-id');
+          var variantId = this.getAttribute('data-variant-id');
+          
+          if (!variantId) return;
+          
+          // Disable button during request
+          this.disabled = true;
+          var originalOpacity = this.style.opacity;
+          this.style.opacity = '0.5';
+          
+          // Add to cart
+          fetch(window.Shopify.routes.root + 'cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              items: [{
+                id: variantId,
+                quantity: 1
+              }]
+            })
+          })
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            // Re-enable button
+            button.disabled = false;
+            button.style.opacity = originalOpacity || '';
+            
+            // Trigger cart update event if available
+            if (typeof BoosterTheme !== 'undefined' && BoosterTheme.cart) {
+              BoosterTheme.cart.update();
             }
-
-            // Attach click handlers to collection items
-            collectionItems.forEach(function(item) {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var blockId = this.getAttribute('data-collection-block');
-                    if (blockId) {
-                        switchCollection(this, blockId);
-                    }
-                });
-            });
-
-            // Handle eye button (add to cart)
-            var eyeButtons = section.querySelectorAll('.best-sellers__product-action-btn--eye');
-            eyeButtons.forEach(function(button) {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    if (this.disabled) return;
-
-                    var productId = this.getAttribute('data-product-id');
-                    var variantId = this.getAttribute('data-variant-id');
-
-                    if (!variantId) return;
-
-                    // Disable button during request
-                    this.disabled = true;
-                    var originalOpacity = this.style.opacity;
-                    this.style.opacity = '0.5';
-
-                    // Add to cart
-                    fetch(window.Shopify.routes.root + 'cart/add.js', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            items: [{
-                                id: variantId,
-                                quantity: 1
-                            }]
-                        })
-                    })
-                        .then(function(response) {
-                            return response.json();
-                        })
-                        .then(function(data) {
-                            // Re-enable button
-                            button.disabled = false;
-                            button.style.opacity = originalOpacity || '';
-
-                            // Trigger cart update event if available
-                            if (typeof BoosterTheme !== 'undefined' && BoosterTheme.cart) {
-                                BoosterTheme.cart.update();
-                            }
-
-                            // Dispatch custom event for cart update
-                            document.dispatchEvent(new CustomEvent('booster:cart:update'));
-                        })
-                        .catch(function(error) {
-                            console.error('Error adding to cart:', error);
-                            button.disabled = false;
-                            button.style.opacity = originalOpacity || '';
-                        });
-                });
-            });
-
-            // Make function available globally for this section
-            window['switchCollection_' + sectionId] = switchCollection;
-        }
-
-        // Initialize on DOM ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initBestSellers);
-        } else {
-            initBestSellers();
-        }
-    })();
+            
+            // Dispatch custom event for cart update
+            document.dispatchEvent(new CustomEvent('booster:cart:update'));
+          })
+          .catch(function(error) {
+            console.error('Error adding to cart:', error);
+            button.disabled = false;
+            button.style.opacity = originalOpacity || '';
+          });
+        });
+      });
+      
+      // Make function available globally for this section
+      window['switchCollection_' + sectionId] = switchCollection;
+    }
+    
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBestSellers);
+    } else {
+      initBestSellers();
+    }
+  })();
 </script>
 
 {% schema %}
