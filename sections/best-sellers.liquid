@@ -455,9 +455,7 @@
                   {% unless block.settings.collection_title == blank %}
                     {{ block.settings.collection_title }}
                   {% else %}
-                    {% if custom_prod != blank %}
-                      {{ custom_prod.title }}
-                    {% elsif all_products_collection %}
+                    {% if all_products_collection %}
                       {{ all_products_collection.title }}
                     {% endif %}
                   {% endunless %}
