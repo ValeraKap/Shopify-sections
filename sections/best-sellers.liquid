@@ -397,19 +397,15 @@
         <div class="best-sellers__collection-list">
           {%- for block in section.blocks -%}
             {%- if block.type == 'collection' -%}
-              {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
               {% assign collection = collections[block.settings.collection] %}
+              {% assign custom_prod = block.settings.custom_product %}
               {% assign show_item = false %}
 
-              {% comment %} Check if we have content to display based on mode {% endcomment %}
-              {% if display_mode == 'custom_product' %}
-                {% if block.settings.product %}
-                  {% assign show_item = true %}
-                {% endif %}
-              {% else %}
-                {% if collection %}
-                  {% assign show_item = true %}
-                {% endif %}
+              {% comment %} Show item if we have custom product or collection {% endcomment %}
+              {% if custom_prod != blank %}
+                {% assign show_item = true %}
+              {% elsif collection %}
+                {% assign show_item = true %}
               {% endif %}
 
               {% if show_item %}
@@ -423,40 +419,8 @@
                   {% unless block.settings.collection_title == blank %}
                     {{ block.settings.collection_title }}
                   {% else %}
-                    {% if display_mode == 'custom_product' and block.settings.product %}
-                      {{ block.settings.product.title }}
-                    {% elsif collection %}
+                    {% if collection %}
                       {{ collection.title }}
-                    {% endif %}
-                  {% endunless %}
-                  <span>→</span>
-                </div>
-              {% endif %}
-            {%- elsif block.type == 'collection_all_products' -%}
-              {% assign all_products_collection = collections[block.settings.collection] %}
-              {% assign custom_prod = block.settings.custom_product %}
-              {% assign show_item = false %}
-
-              {% comment %} Show item if we have custom product or collection {% endcomment %}
-              {% if custom_prod != blank %}
-                {% assign show_item = true %}
-              {% elsif all_products_collection %}
-                {% assign show_item = true %}
-              {% endif %}
-
-              {% if show_item %}
-                <div
-                  class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
-                  data-collection-block="{{ block.id }}"
-                  data-collection-handle="{% if all_products_collection %}{{ all_products_collection.handle }}{% endif %}"
-                  role="button"
-                  tabindex="0"
-                >
-                  {% unless block.settings.collection_title == blank %}
-                    {{ block.settings.collection_title }}
-                  {% else %}
-                    {% if all_products_collection %}
-                      {{ all_products_collection.title }}
                     {% endif %}
                   {% endunless %}
                   <span>→</span>
@@ -472,21 +436,15 @@
         {%- for block in section.blocks -%}
           {%- if block.type == 'collection' -%}
             {% assign display_product = null %}
-            {% assign display_mode = block.settings.display_mode | default: 'collection_first' %}
+            {% assign custom_prod = block.settings.custom_product %}
 
-            {% comment %} Check display mode and get product accordingly {% endcomment %}
-            {% if display_mode == 'custom_product' %}
-              {% comment %} Custom product mode - show selected product {% endcomment %}
-              {% if block.settings.product %}
-                {% assign display_product = block.settings.product %}
-              {% endif %}
-            {% else %}
-              {% comment %} Collection first mode - show first product from collection {% endcomment %}
-              {% if block.settings.collection != blank %}
-                {% assign collection = collections[block.settings.collection] %}
-                {% if collection %}
-                  {% assign display_product = collection.products.first %}
-                {% endif %}
+            {% comment %} If custom product selected, use it; otherwise use first from collection {% endcomment %}
+            {% if custom_prod != blank %}
+              {% assign display_product = custom_prod %}
+            {% elsif block.settings.collection != blank %}
+              {% assign collection = collections[block.settings.collection] %}
+              {% if collection %}
+                {% assign display_product = collection.products.first %}
               {% endif %}
             {% endif %}
 
@@ -590,120 +548,6 @@
                 </div>
               </div>
               {% endif %}
-          {%- elsif block.type == 'collection_all_products' -%}
-            {% assign display_product = null %}
-            {% assign custom_prod = block.settings.custom_product %}
-
-            {% comment %} If custom product selected, use it; otherwise use first from collection {% endcomment %}
-            {% if custom_prod != blank %}
-              {% assign display_product = custom_prod %}
-            {% elsif block.settings.collection != blank %}
-              {% assign all_products_collection = collections[block.settings.collection] %}
-              {% if all_products_collection %}
-                {% assign display_product = all_products_collection.products.first %}
-              {% endif %}
-            {% endif %}
-
-            {% if display_product %}
-                  <div
-                    class="best-sellers__product-content {% if forloop.first %}active{% endif %}"
-                    data-product-block="{{ block.id }}"
-                    id="product-{{ block.id }}"
-                  >
-                    <div class="best-sellers__product-image">
-                      <!-- Product tags -->
-                      {% assign tags_count = 0 %}
-                      {% assign has_tags = false %}
-                      {% if display_product.tags.size > 0 %}
-                        {% for tag in display_product.tags %}
-                          {% if tags_count < 3 %}
-                            {% assign has_tags = true %}
-                            {% assign tags_count = tags_count | plus: 1 %}
-                          {% endif %}
-                        {% endfor %}
-                      {% endif %}
-
-                      {% if has_tags %}
-                        <div class="best-sellers__product-tags">
-                          {% assign tags_count = 0 %}
-                          {% for tag in display_product.tags %}
-                            {% if tags_count >= 3 %}{% break %}{% endif %}
-                            {% assign tag_lower = tag | downcase %}
-                            <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
-                              {{ tag }}
-                            </span>
-                            {% assign tags_count = tags_count | plus: 1 %}
-                          {% endfor %}
-                        </div>
-                      {% endif %}
-
-                      <!-- Product action buttons -->
-                      <div class="best-sellers__product-actions">
-                        <!-- Heart button -->
-                        <button
-                          type="button"
-                          class="best-sellers__product-action-btn best-sellers__product-action-btn--heart"
-                          aria-label="Add to favorites"
-                        >
-                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                          </svg>
-                        </button>
-                        <!-- Eye button (add to cart) -->
-                        <button
-                          type="button"
-                          class="best-sellers__product-action-btn best-sellers__product-action-btn--eye"
-                          aria-label="Quick add to cart"
-                          data-product-id="{{ display_product.id }}"
-                          data-variant-id="{% if display_product.selected_or_first_available_variant %}{{ display_product.selected_or_first_available_variant.id }}{% elsif display_product.first_available_variant %}{{ display_product.first_available_variant.id }}{% endif %}"
-                          {% unless display_product.available %}disabled{% endunless %}
-                        >
-                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                          </svg>
-                        </button>
-                      </div>
-
-                      <a href="{{ display_product.url }}">
-                        {% if display_product.featured_image %}
-                          <picture>
-                            <source
-                              media="(max-width: 767px)"
-                              srcset="{{ display_product.featured_image | img_url: '375x' }} 1x, {{ display_product.featured_image | img_url: '750x' }} 2x"
-                            >
-                            <source
-                              media="(min-width: 768px)"
-                              srcset="{{ display_product.featured_image | img_url: '520x' }} 1x, {{ display_product.featured_image | img_url: '1040x' }} 2x"
-                            >
-                            <img
-                              src="{{ display_product.featured_image | img_url: '520x' }}"
-                              alt="{{ display_product.featured_image.alt | escape }}"
-                              width="{{ display_product.featured_image.width }}"
-                              height="{{ display_product.featured_image.height }}"
-                              loading="lazy"
-                            >
-                          </picture>
-                        {% else %}
-                          {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
-                        {% endif %}
-                      </a>
-
-                      <!-- Product info overlay -->
-                      <div class="best-sellers__product-info">
-                        <h3 class="best-sellers__product-title">
-                          <a href="{{ display_product.url }}">{{ display_product.title }}</a>
-                        </h3>
-                        <div class="best-sellers__product-price">
-                          <span class="price-current">{{ display_product.price | money }}</span>
-                          {% if display_product.compare_at_price > display_product.price %}
-                            <span class="price-compare">{{ display_product.compare_at_price | money }}</span>
-                          {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endif %}
           {%- endif -%}
         {%- endfor -%}
       </div>
@@ -904,48 +748,7 @@
   "blocks": [
     {
       "type": "collection",
-      "name": "Single Product",
-      "settings": [
-        {
-          "type": "select",
-          "id": "display_mode",
-          "label": "Display mode",
-          "options": [
-            {
-              "value": "collection_first",
-              "label": "First product from collection"
-            },
-            {
-              "value": "custom_product",
-              "label": "Select specific product"
-            }
-          ],
-          "default": "collection_first",
-          "info": "Choose how to display products"
-        },
-        {
-          "type": "collection",
-          "id": "collection",
-          "label": "Collection",
-          "info": "Required for 'First product from collection' mode"
-        },
-        {
-          "type": "text",
-          "id": "collection_title",
-          "label": "Collection title",
-          "info": "If empty, collection name will be used"
-        },
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Custom Product",
-          "info": "Only used in 'Select specific product' mode"
-        }
-      ]
-    },
-    {
-      "type": "collection_all_products",
-      "name": "All Products",
+      "name": "Collection",
       "settings": [
         {
           "type": "collection",
@@ -968,7 +771,7 @@
       ]
     }
   ],
-  "max_blocks": 4,
+  "max_blocks": 3,
   "presets": [
     {
       "name": "Best sellers",
