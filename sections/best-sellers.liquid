@@ -48,12 +48,15 @@
 
     @media screen and (max-width: 767px) {
         #s--{{section.id}} .best-sellers__subtitle {
-            font-size: 12px;
+            font-size: 16px;
+            line-height: 24px;
+            color: #535353;
         }
 
         #s--{{section.id}} .best-sellers__title {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            line-height: 34px;
+            margin-bottom: 16px;
         }
     }
 
@@ -111,13 +114,16 @@
 
     @media screen and (max-width: 767px) {
         #s--{{section.id}} .best-sellers__collection-item {
-            font-size: 18px;
-            line-height: 1.4;
-            padding: 15px 0;
+            font-size: 22px;
+            line-height: 28px;
+            padding: 24px 0;
+            gap: 16px;
         }
 
         #s--{{section.id}} .best-sellers__collection-item span {
-            font-size: 18px;
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
         }
     }
 
@@ -212,14 +218,17 @@
 
     @media screen and (max-width: 767px) {
         #s--{{section.id}} .best-sellers__product-tags {
-            top: 10px;
-            left: 10px;
+            top: 8px;
+            left: 8px;
             gap: 4px;
         }
 
         #s--{{section.id}} .best-sellers__product-tag {
-            padding: 5px 10px;
-            font-size: 11px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 18px;
+            border-radius: 8px;
         }
     }
 
@@ -283,20 +292,24 @@
 
     @media screen and (max-width: 767px) {
         #s--{{section.id}} .best-sellers__product-actions {
-            top: 10px;
-            right: 10px;
-            gap: 8px;
+            top: 8px;
+            right: 8px;
+            gap: 4px;
         }
 
         #s--{{section.id}} .best-sellers__product-action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            padding: 12px;
+            background: #FFFFFF;
+            border: 1px solid #DCDCDC;
         }
 
         #s--{{section.id}} .best-sellers__product-action-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
+            stroke-width: 1.5px;
         }
     }
 
@@ -421,40 +434,49 @@
 
     @media screen and (max-width: 767px) {
         #s--{{section.id}} .best-sellers__product-info {
-            padding: 14px 20px;
+            padding: 12px 16px;
             gap: 8px;
-            height: auto;
-            min-height: 56px;
-            left: 10px;
-            bottom: 10px;
-            width: calc(100% - 20px);
+            height: 80px;
+            left: 8px;
+            bottom: 8px;
+            width: calc(100% - 16px);
             max-width: 100%;
-            border: 1px solid #999999;
+            border: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         #s--{{section.id}} .best-sellers__product-title {
             font-size: 16px;
-            line-height: 22px;
-            height: auto;
+            line-height: 24px;
+            font-weight: 500;
+            height: 24px;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         #s--{{section.id}} .best-sellers__product-price {
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-            height: auto;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 8px;
+            height: 24px;
         }
 
         #s--{{section.id}} .best-sellers__product-price .price-current {
             font-size: 16px;
-            line-height: 22px;
-            height: auto;
+            line-height: 24px;
+            font-weight: 500;
+            height: 24px;
         }
 
         #s--{{section.id}} .best-sellers__product-price .price-compare {
-            font-size: 14px;
-            line-height: 20px;
-            height: auto;
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 400;
+            height: 22px;
         }
     }
 </style>
