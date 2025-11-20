@@ -20,26 +20,21 @@
 
   /* Subtitle styles */
   #s--{{section.id}} .best-sellers__subtitle {
-    font-size: 16px;
-    color: #535353;
+    font-size: 12px;
+    color: #999;
     margin-bottom: 8px;
+    letter-spacing: 0.5px;
     font-weight: 400;
-    line-height: 24px;
   }
 
   #s--{{section.id}} .best-sellers__title {
-    font-size: 38px;
+    font-size: 32px;
     font-weight: 500;
-    margin-bottom: 48px;
+    margin-bottom: 30px;
     color: #000;
-    line-height: 46px;
   }
 
   @media screen and (max-width: 767px) {
-    #s--{{section.id}} .best-sellers__subtitle {
-      font-size: 12px;
-    }
-
     #s--{{section.id}} .best-sellers__title {
       font-size: 24px;
       margin-bottom: 20px;
@@ -48,18 +43,16 @@
 
   #s--{{section.id}} .best-sellers__collection-item {
     cursor: pointer;
-    padding: 24px;
-    border-bottom: 1px solid #DCDCDC;
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e5e5;
     transition: color 0.3s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
-    font-size: 28px;
-    line-height: 34px;
-    font-weight: 500;
-    gap: 16px;
-    background: #FFFFFF;
+    font-size: 18px;
+    line-height: 1.4;
+    min-height: 60px;
   }
 
   #s--{{section.id}} .best-sellers__collection-item:hover {
@@ -77,25 +70,7 @@
   }
 
   #s--{{section.id}} .best-sellers__collection-item span {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  @media screen and (max-width: 767px) {
-    #s--{{section.id}} .best-sellers__collection-item {
-      font-size: 18px;
-      line-height: 1.4;
-      padding: 15px 0;
-    }
-
-    #s--{{section.id}} .best-sellers__collection-item span {
-      font-size: 18px;
-    }
+    font-size: 18px;
   }
 
   /* Product display styles */
@@ -165,29 +140,26 @@
   }
 
   #s--{{section.id}} .best-sellers__product-tag {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 8px;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 4px;
     white-space: nowrap;
     background-color: #FFFFFF;
     color: #000000;
-    border: 1px solid #DCDCDC;
-    line-height: 18px;
+    border: 1px solid #999999;
+    line-height: 1.2;
     cursor: default;
     pointer-events: auto;
     user-select: none;
-    text-align: center;
   }
 
   #s--{{section.id}} .best-sellers__product-tag.tag--sale {
     background-color: #E41616;
     color: #FFFFFF;
-    border: none;
+    border: 1px solid #E41616;
   }
 
   @media screen and (max-width: 767px) {
@@ -206,31 +178,32 @@
   /* Product action buttons (heart and eye) */
   #s--{{section.id}} .best-sellers__product-actions {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 15px;
+    right: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     z-index: 3;
   }
 
   #s--{{section.id}} .best-sellers__product-action-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background-color: #FFFFFF;
-    border: 1px solid #DCDCDC;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   #s--{{section.id}} .best-sellers__product-action-btn:hover {
-    background-color: #f5f5f5;
-    border-color: #000;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
   }
 
   #s--{{section.id}} .best-sellers__product-action-btn:disabled {
@@ -240,11 +213,11 @@
   }
 
   #s--{{section.id}} .best-sellers__product-action-btn svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     stroke: #000;
     fill: none;
-    stroke-width: 1.5px;
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
