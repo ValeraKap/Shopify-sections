@@ -1,15 +1,6 @@
 <style type="text/css">
   {% render 'common-css' with section as section %}
 
-  /* Minicart badge - red when items in cart */
-  .item__count {
-    transition: background-color 0.3s ease;
-  }
-
-  .item__count:not([data-count="0"]):not(:empty) {
-    background-color: #E41616 !important;
-  }
-
   #s--{{section.id}} .best-sellers__container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -651,17 +642,6 @@
             
             // Dispatch custom event for cart update
             document.dispatchEvent(new CustomEvent('booster:cart:update'));
-            
-            // Update minicart badge color after cart update
-            setTimeout(function() {
-              var cartCounts = document.querySelectorAll('.item__count[data-count]');
-              cartCounts.forEach(function(countEl) {
-                var count = parseInt(countEl.getAttribute('data-count')) || parseInt(countEl.textContent) || 0;
-                if (count > 0) {
-                  countEl.style.backgroundColor = '#E41616';
-                }
-              });
-            }, 100);
           })
           .catch(function(error) {
             console.error('Error adding to cart:', error);
@@ -670,27 +650,6 @@
           });
         });
       });
-      
-      // Update minicart badge color function
-      function updateMinicartBadge() {
-        var cartCounts = document.querySelectorAll('.item__count[data-count], .item__count');
-        cartCounts.forEach(function(countEl) {
-          var count = parseInt(countEl.getAttribute('data-count')) || parseInt(countEl.textContent.trim()) || 0;
-          if (count > 0) {
-            countEl.style.backgroundColor = '#E41616';
-          } else {
-            countEl.style.backgroundColor = '';
-          }
-        });
-      }
-      
-      // Listen for cart update events
-      document.addEventListener('booster:cart:update', function() {
-        setTimeout(updateMinicartBadge, 100);
-      });
-      
-      // Initial check
-      setTimeout(updateMinicartBadge, 500);
       
       // Make function available globally for this section
       window['switchCollection_' + sectionId] = switchCollection;
