@@ -103,6 +103,24 @@
     opacity: 1;
   }
 
+  /* Grid for all products */
+  #s--{{section.id}} .best-sellers__all-products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media screen and (max-width: 767px) {
+    #s--{{section.id}} .best-sellers__all-products-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+
+  #s--{{section.id}} .best-sellers__grid-item {
+    width: 100%;
+  }
+
   #s--{{section.id}} .best-sellers__product-image {
     position: relative;
     width: 100%;
@@ -414,27 +432,23 @@
                   <span>→</span>
                 </div>
               {% endif %}
-            {%- elsif block.type == 'menu' -%}
-              {% assign menu = linklists[block.settings.menu] %}
-              {% if menu and menu.links.size > 0 %}
-                {%- for link in menu.links -%}
-                  {% if link.url contains '/collections/' %}
-                    {% assign collection_handle = link.url | split: '/collections/' | last | split: '/' | first %}
-                    {% assign collection = collections[collection_handle] %}
-                    {% if collection %}
-                      <div
-                        class="best-sellers__collection-item {% if forloop.first and forloop.parentloop.first %}active{% endif %}"
-                        data-collection-block="{{ block.id }}-{{ forloop.index }}"
-                        data-collection-handle="{{ collection.handle }}"
-                        role="button"
-                        tabindex="0"
-                      >
-                        {{ link.title }}
-                        <span>→</span>
-                      </div>
-                    {% endif %}
-                  {% endif %}
-                {%- endfor -%}
+            {%- elsif block.type == 'collection_all_products' -%}
+              {% assign collection = collections[block.settings.collection] %}
+              {% if collection %}
+                <div
+                  class="best-sellers__collection-item {% if forloop.first %}active{% endif %}"
+                  data-collection-block="{{ block.id }}"
+                  data-collection-handle="{{ collection.handle }}"
+                  role="button"
+                  tabindex="0"
+                >
+                  {% unless block.settings.collection_title == blank %}
+                    {{ block.settings.collection_title }}
+                  {% else %}
+                    {{ collection.title }}
+                  {% endunless %}
+                  <span>→</span>
+                </div>
               {% endif %}
             {%- endif -%}
           {%- endfor -%}
@@ -471,7 +485,7 @@
                     data-product-block="{{ block.id }}"
                     id="product-{{ block.id }}"
                   >
-                <div class="best-sellers__product-image">
+                    <div class="best-sellers__product-image">
                   <!-- Product tags -->
                   {% assign tags_count = 0 %}
                   {% assign has_tags = false %}
@@ -567,127 +581,118 @@
               {% endif %}
             {% endif %}
           {% endunless %}
-          {%- elsif block.type == 'menu' -%}
-            {% assign menu = linklists[block.settings.menu] %}
-            {% if menu and menu.links.size > 0 %}
-              {%- for link in menu.links -%}
-                {% if link.url contains '/collections/' %}
-                  {% assign collection_handle = link.url | split: '/collections/' | last | split: '/' | first %}
-                  {% assign collection = collections[collection_handle] %}
-                  {% if collection %}
-                    {% assign display_product = null %}
-
-                    {% comment %} Get first product from collection {% endcomment %}
-                    {% paginate collection.products by 1 %}
+          {%- elsif block.type == 'collection_all_products' -%}
+            {% unless block.settings.collection == blank %}
+              {% assign collection = collections[block.settings.collection] %}
+              {% if collection %}
+                <div
+                  class="best-sellers__product-content best-sellers__product-content--all {% if forloop.first %}active{% endif %}"
+                  data-product-block="{{ block.id }}"
+                  id="product-{{ block.id }}"
+                >
+                  <div class="best-sellers__all-products-grid">
+                    {% paginate collection.products by 50 %}
                       {% for product in collection.products %}
-                        {% assign display_product = product %}
-                      {% endfor %}
-                    {% endpaginate %}
-
-                    {% if display_product %}
-                      <div
-                        class="best-sellers__product-content {% if forloop.first and forloop.parentloop.first %}active{% endif %}"
-                        data-product-block="{{ block.id }}-{{ forloop.index }}"
-                        id="product-{{ block.id }}-{{ forloop.index }}"
-                      >
-                        <div class="best-sellers__product-image">
-                          <!-- Product tags -->
-                          {% assign tags_count = 0 %}
-                          {% assign has_tags = false %}
-                          {% if display_product.tags.size > 0 %}
-                            {% for tag in display_product.tags %}
-                              {% if tags_count < 3 %}
-                                {% assign has_tags = true %}
-                                {% assign tags_count = tags_count | plus: 1 %}
-                              {% endif %}
-                            {% endfor %}
-                          {% endif %}
-
-                          {% if has_tags %}
-                            <div class="best-sellers__product-tags">
-                              {% assign tags_count = 0 %}
-                              {% for tag in display_product.tags %}
-                                {% if tags_count >= 3 %}{% break %}{% endif %}
-                                {% assign tag_lower = tag | downcase %}
-                                <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
-                                  {{ tag }}
-                                </span>
-                                {% assign tags_count = tags_count | plus: 1 %}
+                        <div class="best-sellers__grid-item">
+                          <div class="best-sellers__product-image">
+                            <!-- Product tags -->
+                            {% assign tags_count = 0 %}
+                            {% assign has_tags = false %}
+                            {% if product.tags.size > 0 %}
+                              {% for tag in product.tags %}
+                                {% if tags_count < 3 %}
+                                  {% assign has_tags = true %}
+                                  {% assign tags_count = tags_count | plus: 1 %}
+                                {% endif %}
                               {% endfor %}
-                            </div>
-                          {% endif %}
-
-                          <!-- Product action buttons -->
-                          <div class="best-sellers__product-actions">
-                            <!-- Heart button (no functionality) -->
-                            <button
-                              type="button"
-                              class="best-sellers__product-action-btn best-sellers__product-action-btn--heart"
-                              aria-label="Add to favorites"
-                            >
-                              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                              </svg>
-                            </button>
-                            <!-- Eye button (add to cart) -->
-                            <button
-                              type="button"
-                              class="best-sellers__product-action-btn best-sellers__product-action-btn--eye"
-                              aria-label="Quick add to cart"
-                              data-product-id="{{ display_product.id }}"
-                              data-variant-id="{% if display_product.selected_or_first_available_variant %}{{ display_product.selected_or_first_available_variant.id }}{% elsif display_product.first_available_variant %}{{ display_product.first_available_variant.id }}{% endif %}"
-                              {% unless display_product.available %}disabled{% endunless %}
-                            >
-                              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                              </svg>
-                            </button>
-                          </div>
-
-                          <a href="{{ display_product.url }}">
-                            {% if display_product.featured_image %}
-                              <picture>
-                                <source
-                                  media="(max-width: 767px)"
-                                  srcset="{{ display_product.featured_image | img_url: '375x' }} 1x, {{ display_product.featured_image | img_url: '750x' }} 2x"
-                                >
-                                <source
-                                  media="(min-width: 768px)"
-                                  srcset="{{ display_product.featured_image | img_url: '520x' }} 1x, {{ display_product.featured_image | img_url: '1040x' }} 2x"
-                                >
-                                <img
-                                  src="{{ display_product.featured_image | img_url: '520x' }}"
-                                  alt="{{ display_product.featured_image.alt | escape }}"
-                                  width="{{ display_product.featured_image.width }}"
-                                  height="{{ display_product.featured_image.height }}"
-                                  loading="lazy"
-                                >
-                              </picture>
-                            {% else %}
-                              {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
                             {% endif %}
-                          </a>
 
-                          <!-- Product info overlay -->
-                          <div class="best-sellers__product-info">
-                            <h3 class="best-sellers__product-title">
-                              <a href="{{ display_product.url }}">{{ display_product.title }}</a>
-                            </h3>
-                            <div class="best-sellers__product-price">
-                              <span class="price-current">{{ display_product.price | money }}</span>
-                              {% if display_product.compare_at_price > display_product.price %}
-                                <span class="price-compare">{{ display_product.compare_at_price | money }}</span>
+                            {% if has_tags %}
+                              <div class="best-sellers__product-tags">
+                                {% assign tags_count = 0 %}
+                                {% for tag in product.tags %}
+                                  {% if tags_count >= 3 %}{% break %}{% endif %}
+                                  {% assign tag_lower = tag | downcase %}
+                                  <span class="best-sellers__product-tag {% if tag_lower == 'sale' %}tag--sale{% endif %}">
+                                    {{ tag }}
+                                  </span>
+                                  {% assign tags_count = tags_count | plus: 1 %}
+                                {% endfor %}
+                              </div>
+                            {% endif %}
+
+                            <!-- Product action buttons -->
+                            <div class="best-sellers__product-actions">
+                              <!-- Heart button -->
+                              <button
+                                type="button"
+                                class="best-sellers__product-action-btn best-sellers__product-action-btn--heart"
+                                aria-label="Add to favorites"
+                              >
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                              </button>
+                              <!-- Eye button (add to cart) -->
+                              <button
+                                type="button"
+                                class="best-sellers__product-action-btn best-sellers__product-action-btn--eye"
+                                aria-label="Quick add to cart"
+                                data-product-id="{{ product.id }}"
+                                data-variant-id="{% if product.selected_or_first_available_variant %}{{ product.selected_or_first_available_variant.id }}{% elsif product.first_available_variant %}{{ product.first_available_variant.id }}{% endif %}"
+                                {% unless product.available %}disabled{% endunless %}
+                              >
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                  <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                              </button>
+                            </div>
+
+                            <a href="{{ product.url }}">
+                              {% if product.featured_image %}
+                                <picture>
+                                  <source
+                                    media="(max-width: 767px)"
+                                    srcset="{{ product.featured_image | img_url: '375x' }} 1x, {{ product.featured_image | img_url: '750x' }} 2x"
+                                  >
+                                  <source
+                                    media="(min-width: 768px)"
+                                    srcset="{{ product.featured_image | img_url: '260x' }} 1x, {{ product.featured_image | img_url: '520x' }} 2x"
+                                  >
+                                  <img
+                                    src="{{ product.featured_image | img_url: '260x' }}"
+                                    alt="{{ product.featured_image.alt | escape }}"
+                                    width="{{ product.featured_image.width }}"
+                                    height="{{ product.featured_image.height }}"
+                                    loading="lazy"
+                                  >
+                                </picture>
+                              {% else %}
+                                {{ 'product-1' | placeholder_svg_tag: 'best-sellers__placeholder' }}
                               {% endif %}
+                            </a>
+
+                            <!-- Product info overlay -->
+                            <div class="best-sellers__product-info">
+                              <h3 class="best-sellers__product-title">
+                                <a href="{{ product.url }}">{{ product.title }}</a>
+                              </h3>
+                              <div class="best-sellers__product-price">
+                                <span class="price-current">{{ product.price | money }}</span>
+                                {% if product.compare_at_price > product.price %}
+                                  <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                                {% endif %}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    {% endif %}
-                  {% endif %}
-                {% endif %}
-              {%- endfor -%}
-            {% endif %}
+                      {% endfor %}
+                    {% endpaginate %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endunless %}
           {%- endif -%}
         {%- endfor -%}
       </div>
@@ -888,7 +893,7 @@
   "blocks": [
     {
       "type": "collection",
-      "name": "Collection",
+      "name": "Single Product",
       "settings": [
         {
           "type": "collection",
@@ -910,14 +915,20 @@
       ]
     },
     {
-      "type": "menu",
-      "name": "Menu (Categories)",
+      "type": "collection_all_products",
+      "name": "All Products",
       "settings": [
         {
-          "type": "link_list",
-          "id": "menu",
-          "label": "Menu",
-          "info": "Menu with collection links. All collection links will automatically display products."
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "All products from this collection will be displayed in a grid"
+        },
+        {
+          "type": "text",
+          "id": "collection_title",
+          "label": "Collection title",
+          "info": "If empty, collection name will be used"
         }
       ]
     }
