@@ -434,13 +434,18 @@
               {% endif %}
             {%- elsif block.type == 'collection_all_products' -%}
               {% assign all_products_collection = collections[block.settings.collection] %}
+              {% assign product_source = block.settings.product_source | default: 'collection_first' %}
               {% assign show_item = false %}
 
-              {% comment %} Show item if either custom product or collection is set {% endcomment %}
-              {% if block.settings.product %}
-                {% assign show_item = true %}
-              {% elsif all_products_collection %}
-                {% assign show_item = true %}
+              {% comment %} Check product source and show item accordingly {% endcomment %}
+              {% if product_source == 'custom' %}
+                {% if block.settings.product %}
+                  {% assign show_item = true %}
+                {% endif %}
+              {% else %}
+                {% if all_products_collection %}
+                  {% assign show_item = true %}
+                {% endif %}
               {% endif %}
 
               {% if show_item %}
@@ -454,7 +459,7 @@
                   {% unless block.settings.collection_title == blank %}
                     {{ block.settings.collection_title }}
                   {% else %}
-                    {% if block.settings.product %}
+                    {% if product_source == 'custom' and block.settings.product %}
                       {{ block.settings.product.title }}
                     {% elsif all_products_collection %}
                       {{ all_products_collection.title }}
@@ -593,14 +598,21 @@
               {% endif %}
           {%- elsif block.type == 'collection_all_products' -%}
             {% assign display_product = null %}
+            {% assign product_source = block.settings.product_source | default: 'collection_first' %}
 
-            {% comment %} Check if custom product is selected, otherwise use first from collection {% endcomment %}
-            {% if block.settings.product %}
-              {% assign display_product = block.settings.product %}
-            {% elsif block.settings.collection != blank %}
-              {% assign all_products_collection = collections[block.settings.collection] %}
-              {% if all_products_collection %}
-                {% assign display_product = all_products_collection.products.first %}
+            {% comment %} Check product source and get product accordingly {% endcomment %}
+            {% if product_source == 'custom' %}
+              {% comment %} Custom product mode {% endcomment %}
+              {% if block.settings.product %}
+                {% assign display_product = block.settings.product %}
+              {% endif %}
+            {% else %}
+              {% comment %} Collection first product mode {% endcomment %}
+              {% if block.settings.collection != blank %}
+                {% assign all_products_collection = collections[block.settings.collection] %}
+                {% if all_products_collection %}
+                  {% assign display_product = all_products_collection.products.first %}
+                {% endif %}
               {% endif %}
             {% endif %}
 
@@ -951,7 +963,7 @@
           "type": "collection",
           "id": "collection",
           "label": "Collection",
-          "info": "Select collection to show first product automatically"
+          "info": "Select collection for products"
         },
         {
           "type": "text",
@@ -960,10 +972,26 @@
           "info": "If empty, collection name will be used"
         },
         {
+          "type": "radio",
+          "id": "product_source",
+          "label": "Product source",
+          "options": [
+            {
+              "value": "collection_first",
+              "label": "First product from collection"
+            },
+            {
+              "value": "custom",
+              "label": "Select custom product"
+            }
+          ],
+          "default": "collection_first"
+        },
+        {
           "type": "product",
           "id": "product",
-          "label": "Custom Product (optional)",
-          "info": "If selected, this product will override the collection's first product"
+          "label": "Custom Product",
+          "info": "Only shown when 'Select custom product' is chosen above"
         }
       ]
     }
