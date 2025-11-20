@@ -17,7 +17,7 @@
           "settings": {
             "collection": "mantra-rings",
             "collection_title": "Mantra Rings - (New name)",
-            "product": "test"
+            "custom_product": "northern-dawn-feminized-cannabis-seeds"
           }
         },
         "collection_HVgRWa": {
@@ -25,7 +25,7 @@
           "settings": {
             "collection": "charitybands®",
             "collection_title": "CharityBands® - (Disabled Eye)",
-            "product": "product-0"
+            "custom_product": ""
           }
         },
         "collection_BBNXmc": {
@@ -33,7 +33,7 @@
           "settings": {
             "collection": "statement-collection",
             "collection_title": "Statement Collection - (No Image)",
-            "product": "product-1-empty"
+            "custom_product": ""
           }
         }
       },
